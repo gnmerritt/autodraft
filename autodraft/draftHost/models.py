@@ -18,6 +18,20 @@ class NflPlayer(models.Model):
     team = models.ForeignKey(NflTeam)
     position = models.ForeignKey(Position)
 
+class ExternalDatabase(models.Model):
+    """An external player DB ie ESPN or Yahoo"""
+    name = models.TextField(max_length=20)
+    description = models.TextField(max_length=200)
+    homepage = models.URLField()
+
+class ExternalNflPlayer(models.Model):
+    """Link to an external database's player info"""
+    player = models.ForeignKey(NflPlayer)
+    db = models.ForeignKey(ExternalDatabase)
+    external_id = models.IntegerField()
+    url = models.URLField()
+    picture = models.URLField()
+
 class FantasyDraft(models.Model):
     name = models.TextField(max_length=20)
     admin = models.EmailField()
