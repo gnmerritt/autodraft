@@ -5,8 +5,14 @@ class NflConference(models.Model):
     name = models.TextField()
     abbreviation = models.TextField(max_length=5)
 
+    def __unicode__(self):
+        return self.name
+
 class NflDivision(models.Model):
     name = models.TextField()
+
+    def __unicode__(self):
+        return self.name
 
 class NflTeam(models.Model):
     """NFL Team"""
