@@ -2,6 +2,8 @@ from draftHost.models import *
 from django.contrib import admin
 
 # Will be imported from external sources:
+admin.site.register(NflConference)
+admin.site.register(NflDivision)
 admin.site.register(NflTeam)
 admin.site.register(Position)
 admin.site.register(NflPlayer)

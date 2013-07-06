@@ -1,9 +1,19 @@
 from django.db import models
 import datetime
 
+class NflConference(models.Model):
+    name = models.TextField()
+    abbreviation = models.TextField(max_length=5)
+
+class NflDivision(models.Model):
+    name = models.TextField()
+
 class NflTeam(models.Model):
     """NFL Team"""
     name = models.TextField()
+    abbreviation = models.TextField(max_length=5)
+    city = models.TextField()
+    division = models.ForeignKey(NflDivision)
 
 class Position(models.Model):
     """Football position e.g. RB or QB"""
