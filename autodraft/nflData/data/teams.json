@@ -1,0 +1,46 @@
+{
+"AFC":{
+    "East":
+    {"city":"Buffalo", "name":"Bills"},
+    {"city":"Miami", "name":"Dolphins"},
+    {"city":"New England", "name":"Patriots"},
+    {"city":"New York", "name":"Jets"},
+    "North":
+    {"city":"Baltimore", "name":"Ravens"},
+    {"city":"Cincinnati", "name":"Bengals"},
+    {"city":"Cleveland", "name":"Browns"},
+    {"city":"Pittsburgh", "name":"Steelers"},
+    "South":
+    {"city":"Houston", "name":"Texans"},
+    {"city":"Indianapolis", "name":"Colts"},
+    {"city":"Jacksonville", "name":"Jaguars"},
+    {"city":"Tennessee", "name":"Titans"},
+    "West":
+    {"city":"Denver", "name":"Broncos"},
+    {"city":"Kansas City", "name":"Chiefs"},
+    {"city":"Oakland", "name":"Raiders"},
+    {"city":"San Diego", "name":"Chargers"},
+},
+"NFC":{
+    "East":
+    {"city":"Dallas", "name":"Cowboys"},
+    {"city":"New York", "name":"Giants"},
+    {"city":"Philadelphia", "name":"Eagles"},
+    {"city":"Washington", "name":"Redskins"},
+    "North":
+    {"city":"Chicago", "name":"Bears"},
+    {"city":"Detroit", "name":"Lions"},
+    {"city":"Green Bay", "name":"Packers"},
+    {"city":"Minnesota", "name":"Vikings"},
+    "South":
+    {"city":"Atlanta", "name":"Falcons"},
+    {"city":"Carolina", "name":"Panthers"},
+    {"city":"New Orleans", "name":"Saints"},
+    {"city":"Tampa Bay", "name":"Buccaneers"},
+    "West":
+    {"city":"Arizona", "name":"Cardinals"},
+    {"city":"St. Louis", "name":"Rams"},
+    {"city":"San Francisco", "name":"49ers"},
+    {"city":"Seattle", "name":"Seahawks"},
+},
+}
