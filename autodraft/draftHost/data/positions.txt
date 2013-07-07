@@ -1,7 +1,6 @@
-QB      Quarterback
-RB      Running back
-FB      Fullback
-WR      Wide receiver
-TE      Tight end
-K       Kicker
-DST     Defense/Special Teams
+QB,Quarterback
+RB,Running back
+WR,Wide receiver
+TE,Tight end
+K,Kicker
+DST,Defense/Special Teams
