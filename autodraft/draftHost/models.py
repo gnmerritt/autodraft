@@ -10,6 +10,7 @@ class NflConference(models.Model):
 
 class NflDivision(models.Model):
     name = models.TextField()
+    conference = models.ForeignKey(NflConference)
 
     def __unicode__(self):
         return self.name
@@ -21,10 +22,16 @@ class NflTeam(models.Model):
     city = models.TextField()
     division = models.ForeignKey(NflDivision)
 
+    def __unicode__(self):
+        return "{c} {n}".format(c=self.city, n=self.name)
+
 class Position(models.Model):
     """Football position e.g. RB or QB"""
     desc = models.TextField()
     abbreviation = models.TextField(max_length=4)
+
+    def __unicode__(self):
+        return self.desc
 
 class NflPlayer(models.Model):
     """Draft-eligible NFL player"""

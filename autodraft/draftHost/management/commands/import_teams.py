@@ -14,6 +14,8 @@ class Command(NoArgsCommand):
         teams = TeamImporter(self.load_json())
         teams.build()
 
+        print "Conferences, Divisions & Teams added!"
+
     def load_json(self):
         try:
             json_file = open(DATA_FILE, 'r')
@@ -44,9 +46,18 @@ class TeamImporter(object):
             conference = NflConference.objects.get(abbreviation=conference_abbr)
 
             for division_name, teams in data.iteritems():
-                division, created_division = \
-                  NflDivision.objects.get_or_create(name="{c} {d}"
-                                                    .format(c=conference_abbr, d=division_name))
+                division, created_division = NflDivision.objects.get_or_create(
+                    conference=conference,
+                    name="{c} {d}".format(c=conference_abbr, d=division_name))
+
+                for team in teams:
+                    self.add_team(division, team)
 
     def add_team(self, division, team_data):
-        pass
+        team_data['division'] = division
+        team_data['abbreviation'] = 'TODO'
+        _, created = NflTeam.objects.get_or_create(**team_data)
+        if created:
+            print "adding {t} to {d}".format(t=team_data, d=division.name)
+        else:
+            print "got {t}".format(t=team_data)
