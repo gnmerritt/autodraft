@@ -41,11 +41,17 @@ class NflPlayer(models.Model):
     team = models.ForeignKey(NflTeam)
     position = models.ForeignKey(Position)
 
+    def __unicode__(self):
+        return "{f} {l}".format(f=self.first_name, l=self.last_name)
+
 class ExternalDatabase(models.Model):
     """An external player DB ie ESPN or Yahoo"""
     name = models.TextField(max_length=20)
     description = models.TextField(max_length=200)
     homepage = models.URLField()
+
+    def __unicode__(self):
+        return self.name
 
 class ExternalNflPlayer(models.Model):
     """Link to an external database's player info"""
@@ -62,11 +68,17 @@ class FantasyDraft(models.Model):
     time_per_pick = models.PositiveIntegerField()
     team_limit = models.PositiveIntegerField()
 
+    def __unicode__(self):
+        return self.name
+
 class FantasyTeam(models.Model):
     draft = models.ForeignKey(FantasyDraft)
     name = models.TextField(max_length=80)
     email = models.EmailField()
-    auth_key = models.TextField(max_length=40) # len(`uuidgen`) == 36
+    auth_key = models.TextField(max_length=40) # len(uuid.uuid4) == 36
+
+    def __unicode__(self):
+        return self.name
 
 class FantasyUpcomingPick(models.Model):
     """An upcoming pick"""
