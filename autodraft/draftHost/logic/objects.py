@@ -30,7 +30,7 @@ class JsonObject(object):
                 pass
         return function_mapping
 
-    def json_response(self):
+    def json_dict(self):
         json_dict = self.db_to_dict({},
                                     self.list_to_mapping_dict(self.BASE_FIELDS))
         if hasattr(self, 'fields'):
@@ -46,7 +46,13 @@ class JsonObject(object):
             values_from_functions = self.eval_functions_to_dict(self.functions)
             json_dict = dict(json_dict.items() + values_from_functions.items())
 
+    def json_response(self):
+        json_dict = self.json_dict()
         return obj_to_json(json_dict)
+
+    def json_string(self):
+        json_dict = self.json_dict()
+        return json.dumps(json_dict)
 
     def db_to_dict(self, json_dict, fields):
         for field, output in fields.iteritems():
