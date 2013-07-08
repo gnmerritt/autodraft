@@ -2,7 +2,7 @@ from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 
 import draftHost.logic.objects as objects
-from draftHost.models import NflPlayer
+import draftHost.models as models
 
 def draft(request):
     return HttpResponse("draft/")
@@ -15,12 +15,24 @@ def make_pick(request, pick_id, player_id):
                         .format(p=pick_id, who=player_id))
 
 def player(request, uid):
-    db_player = get_object_or_404(NflPlayer, pk=uid)
+    db_player = get_object_or_404(models.NflPlayer, pk=uid)
     json_player = objects.JsonNflPlayer(db_player)
     return json_player.json_response()
 
 def search(request, query):
     return HttpResponse("search/{q}".format(q=query))
 
-def team_info(request, name):
-    return HttpResponse("team/{n}".format(n=name))
+def team_info_id(request, id):
+    team = get_object_or_404(models.FantasyTeam, pk=id)
+    return team_response(team)
+
+def team_info_name(request, name):
+    team = {} # TODO
+    return team_response(team)
+
+def team_response(db_team):
+    json_team = objects.JsonFantasyTeam(db_team)
+    return json_team.json_response()
+
+def register(request):
+    return HttpResponse("hello, registration form")
