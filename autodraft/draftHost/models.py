@@ -25,21 +25,20 @@ class NflTeam(models.Model):
     def __unicode__(self):
         return "{c} {n}".format(c=self.city, n=self.name)
 
-class Position(models.Model):
+class NflPosition(models.Model):
     """Football position e.g. RB or QB"""
-    desc = models.TextField()
+    description = models.TextField()
     abbreviation = models.TextField(max_length=4)
 
     def __unicode__(self):
-        return self.desc
+        return self.description
 
 class NflPlayer(models.Model):
     """Draft-eligible NFL player"""
     first_name = models.TextField()
     last_name = models.TextField()
-    jersey_number = models.PositiveIntegerField()
     team = models.ForeignKey(NflTeam)
-    position = models.ForeignKey(Position)
+    position = models.ForeignKey(NflPosition)
 
     def __unicode__(self):
         return "{f} {l}".format(f=self.first_name, l=self.last_name)
@@ -80,7 +79,7 @@ class FantasyTeam(models.Model):
     def __unicode__(self):
         return self.name
 
-class FantasyUpcomingPick(models.Model):
+class FantasyPick(models.Model):
     """An upcoming pick"""
     fantasy_team = models.ForeignKey(FantasyTeam)
     expires = models.DateTimeField('expires at')
@@ -89,9 +88,9 @@ class FantasyUpcomingPick(models.Model):
     class Meta:
         ordering = ('pick_number',)
 
-class FantasyPick(models.Model):
+class FantasySelection(models.Model):
     """A pick that's been made"""
     fantasy_team = models.ForeignKey(FantasyTeam)
     when = models.DateTimeField(default=datetime.datetime.now())
-    draft_pick = models.ForeignKey(FantasyUpcomingPick)
+    draft_pick = models.ForeignKey(FantasyPick)
     player = models.ForeignKey(NflPlayer)

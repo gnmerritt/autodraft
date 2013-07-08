@@ -11,7 +11,7 @@ class JsonObject(object):
     To add additional fields in a subclass, define one or more of
     functions, fields and mappings.
     """
-    BASE_FIELDS = ['id', 'name', 'description']
+    BASE_FIELDS = ['id', 'name', 'description', 'abbreviation']
 
     def __init__(self, db_object):
         self.d = {}
@@ -32,7 +32,7 @@ class JsonObject(object):
 
     def json_response(self):
         json_dict = self.db_to_dict({},
-                                        self.list_to_mapping_dict(self.BASE_FIELDS))
+                                    self.list_to_mapping_dict(self.BASE_FIELDS))
         if hasattr(self, 'fields'):
             # check the db object for any fields
             json_dict = self.db_to_dict(json_dict,
