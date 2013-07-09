@@ -14,7 +14,6 @@ class JsonObject(object):
     BASE_FIELDS = ['id', 'name', 'description', 'abbreviation']
 
     def __init__(self, db_object):
-        self.d = {}
         self.db_object = db_object
 
     def list_to_mapping_dict(self, list):
@@ -22,8 +21,10 @@ class JsonObject(object):
 
     def eval_functions_to_dict(self, functions):
         function_mapping = {}
-        for key, func in functions.iteritems():
+        for key in functions:
+            func_name = "get_{f}".format(f=key)
             try:
+                func = getattr(self, func_name)
                 func_value = func()
                 function_mapping[key] = func_value
             except: # catch everything!
