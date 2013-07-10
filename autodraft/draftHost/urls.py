@@ -8,5 +8,6 @@ urlpatterns = patterns('draftHost.views',
     url(r'^search/(?P<query>.*)/?$', 'search'),
     url(r'^team/(?P<id>\d+)/?$', 'team_info_id'),
     url(r'^team/(?P<name>.*)/?$', 'team_info_name'),
+    url(r'^team/?$', 'current_team'),
     url(r'^register/?$', 'register'),
 )

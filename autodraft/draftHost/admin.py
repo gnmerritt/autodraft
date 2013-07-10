@@ -16,6 +16,7 @@ admin.site.register(models.ExternalNflPlayer)
 admin.site.register(models.FantasyPick)
 admin.site.register(models.FantasySelection)
 
+
 # Created per-draft by the singup page:
 admin.site.register(models.FantasyDraft)
 admin.site.register(models.FantasyTeam)
