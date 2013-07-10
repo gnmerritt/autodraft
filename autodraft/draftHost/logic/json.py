@@ -20,6 +20,8 @@ class JsonObject(object):
         return {key: key for key in list}
 
     def eval_functions_to_dict(self, functions):
+        """Checks the functions variable for a list of JSON keys
+        For each key, check for a getter function, self.get_{key}()"""
         function_mapping = {}
         for key in functions:
             func_name = "get_{f}".format(f=key)
@@ -47,7 +49,10 @@ class JsonObject(object):
             values_from_functions = self.eval_functions_to_dict(self.functions)
             json_dict = dict(json_dict.items() + values_from_functions.items())
 
-        return self.prune_nulls(json_dict)
+        json_dict = self.prune_nulls(json_dict)
+        json_dict = self.prune_disabled_keys(json_dict)
+
+        return json_dict
 
     def prune_nulls(self, in_dict):
         """Clear any Nones / empty strings out from the JSON dictionary"""
@@ -55,6 +60,19 @@ class JsonObject(object):
                      if v is None or v == ""]
         for key in to_remove:
             del in_dict[key]
+        return in_dict
+
+    def prune_disabled_keys(self, in_dict):
+        """Check the show_{key} boolean to see if this key is disabled"""
+        to_remove = []
+        for key in in_dict:
+            show_name = "show_{f}".format(f=key)
+            included = not hasattr(self, show_name) or getattr(self, show_name)
+            if not included:
+                to_remove.append(key)
+        for key in to_remove:
+            del in_dict[key]
+
         return in_dict
 
     def json_response(self):

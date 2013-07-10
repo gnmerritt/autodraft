@@ -61,6 +61,24 @@ class JsonObjectTest(TestCase):
         out_dict = test_obj.json_dict()
         self.assertEquals({}, out_dict)
 
+    def test_skip_boolean(self):
+        """Verify the show_{key} variable works and is default true"""
+        class FuncJson(JsonObject):
+            fields = ['one', 'two', 'three']
+        class MockDb(object):
+            one = "one"
+            two = "two"
+            three = "three"
+
+        test_obj = FuncJson(MockDb())
+        test_obj.show_one = False
+        test_obj.show_two = True
+        out_dict = test_obj.json_dict()
+
+        for key in ['two', 'three']:
+            self.assertIn(key, out_dict)
+            self.assertEquals(out_dict[key], key)
+
     def test_fields_variable(self):
         class MockDb:
             def __init__(self):

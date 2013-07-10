@@ -6,17 +6,10 @@ class JsonFantasyTeam(JsonObject):
     fields = ['name', 'email']
     functions = ['picks', 'draft']
 
-    show_picks = False
-    show_draft = False
-
     def get_picks(self):
-        if self.show_picks:
-            pass
         return None
 
     def get_draft(self):
-        if self.show_draft:
-            pass
         return None
 
 
@@ -24,12 +17,8 @@ class JsonFantasyPick(JsonObject):
     fields = ['expires', 'pick_number',]
     functions = ['team',]
 
-    show_team = True
-
     def get_team(self):
-        if self.show_team:
-            return JsonFantasyTeam(self.db_object.fantasy_team).json_dict()
-        return None
+        return JsonFantasyTeam(self.db_object.fantasy_team).json_dict()
 
 
 class JsonFantasySelection(JsonObject):
