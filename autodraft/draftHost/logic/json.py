@@ -47,7 +47,15 @@ class JsonObject(object):
             values_from_functions = self.eval_functions_to_dict(self.functions)
             json_dict = dict(json_dict.items() + values_from_functions.items())
 
-        return json_dict
+        return self.prune_nulls(json_dict)
+
+    def prune_nulls(self, in_dict):
+        """Clear any Nones / empty strings out from the JSON dictionary"""
+        to_remove = [k for k,v in in_dict.iteritems()
+                     if v is None or v == ""]
+        for key in to_remove:
+            del in_dict[key]
+        return in_dict
 
     def json_response(self):
         json_dict = self.json_dict()

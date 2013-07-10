@@ -47,6 +47,20 @@ class JsonObjectTest(TestCase):
             self.assertIn(key, out_dict)
             self.assertEquals(out_dict[key], key)
 
+    def test_drop_null_values(self):
+        """Make sure we drop any keys with null values"""
+        class FuncJson(JsonObject):
+            functions = ["none", "empty_str"]
+
+            def get_none(self):
+                return None
+            def get_empty_str(self):
+                return ""
+
+        test_obj = FuncJson({})
+        out_dict = test_obj.json_dict()
+        self.assertEquals({}, out_dict)
+
     def test_fields_variable(self):
         class MockDb:
             def __init__(self):
