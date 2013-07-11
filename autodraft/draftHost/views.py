@@ -21,7 +21,8 @@ def draft(request):
 
 def picks(request):
     context = get_context_or_error(request)
-    return HttpResponse("picks")
+    picks = fantasy.PickBuilder(context.draft)
+    return picks.json_response()
 
 def make_pick(request, pick_id, player_id):
     context = get_context_or_error(request)

@@ -41,8 +41,11 @@ class JsonFantasyDraft(JsonObject):
     def get_time_per_pick_s(self):
         return self.db_object.time_per_pick
 
+    def get_team_db_objects(self):
+        return models.FantasyTeam.objects.filter(draft=self.db_object)
+
     def get_teams(self):
-        teams = models.FantasyTeam.objects.filter(draft=self.db_object)
+        teams = self.get_team_db_objects()
         json = []
         for team in teams:
             j = JsonFantasyTeam(team)
@@ -68,12 +71,36 @@ class JsonFantasyTeam(JsonObject):
 
 
 class JsonFantasyPick(JsonObject):
-    fields = ['expires', 'pick_number',]
-    functions = ['team',]
+    fields = ['pick_number',]
+    functions = ['team', 'expires',]
+
+    def get_expires(self):
+        pass
 
     def get_team(self):
         return JsonFantasyTeam(self.db_object.fantasy_team).json_dict()
 
+
+class PickBuilder(JsonObject):
+    """Accumulates a list of picks associated with a draft
+    Constructor argument should be a FantasyDraft model object"""
+    functions = ['picks', 'selections', 'pagination',]
+
+    # These will be for the draft db object, so suppress them
+    show_name = False
+    show_id = False
+
+    def get_picks(self):
+        teams = set(JsonFantasyDraft(self.db_object).get_team_db_objects())
+        pick_json = []
+        picks = models.FantasyPick.objects.filter() ## TODO where team in teams?
+        for pick in picks:
+            json_pick = JsonFantasyPick(pick)
+            pick_json.append(json_pick.json_dict())
+        return pick_json
+
+    def get_selections(self):
+        pass
 
 class JsonFantasySelection(JsonObject):
     fields = ['when',]
