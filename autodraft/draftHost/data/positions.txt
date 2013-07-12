@@ -4,3 +4,4 @@ WR,Wide receiver
 TE,Tight end
 K,Kicker
 DST,Defense/Special Teams
+BN,Bench
