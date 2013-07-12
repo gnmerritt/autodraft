@@ -90,32 +90,6 @@ class JsonFantasyPick(JsonObject):
         return JsonFantasyTeam(self.db_object.fantasy_team).json_dict()
 
 
-class PickBuilder(JsonObject):
-    """Accumulates a list of picks associated with a draft
-    Constructor argument should be a FantasyDraft model object"""
-    functions = ['picks', 'selections',]
-
-    # These will be for the draft db object, so suppress them
-    show_name = False
-    show_id = False
-
-    def get_picks(self):
-        pick_json = []
-        picks = models.FantasyPick.objects.filter(fantasy_team__draft=self.db_object)
-        for pick in picks:
-            json_pick = JsonFantasyPick(pick)
-            pick_json.append(json_pick.json_dict())
-        return pick_json
-
-    def get_selections(self):
-        selections_json = []
-        selections = models.FantasySelection.objects.filter(
-            draft_pick__fantasy_team__draft=self.db_object)
-        for selection in selections:
-            json_selection = JsonFantasySelection(selection)
-            selections_json.append(json_selection.json_dict())
-        return selections_json
-
 class JsonFantasySelection(JsonObject):
     functions = ['team', 'draft_pick', 'player', 'when',]
 

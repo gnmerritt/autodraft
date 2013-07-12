@@ -5,6 +5,7 @@ import django.http.response
 import draftHost.models as models
 import draftHost.logic.nfl as nfl
 import draftHost.logic.fantasy as fantasy
+import draftHost.logic.draft as drafter
 from draftHost.logic.fantasy import AuthContext as AuthContext
 
 def get_context_or_error(request):
@@ -21,7 +22,7 @@ def draft(request):
 
 def picks(request):
     context = get_context_or_error(request)
-    picks = fantasy.PickBuilder(context.draft)
+    picks = drafter.PickBuilder(context.draft)
     return picks.json_response()
 
 def make_pick(request, pick_id, player_id):
