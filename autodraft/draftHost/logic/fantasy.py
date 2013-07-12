@@ -91,9 +91,8 @@ class PickBuilder(JsonObject):
     show_id = False
 
     def get_picks(self):
-        teams = set(JsonFantasyDraft(self.db_object).get_team_db_objects())
         pick_json = []
-        picks = models.FantasyPick.objects.filter() ## TODO where team in teams?
+        picks = models.FantasyPick.objects.filter(fantasy_team__draft=self.db_object)
         for pick in picks:
             json_pick = JsonFantasyPick(pick)
             pick_json.append(json_pick.json_dict())
