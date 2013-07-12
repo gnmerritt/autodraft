@@ -33,10 +33,13 @@ class AuthContext(object):
     def is_valid(self):
         return self.team is not None and self.draft is not None
 
+class JsonFantasyRoster(JsonObject):
+    pass ## TODO
+
 
 class JsonFantasyDraft(JsonObject):
     fields = ['admin', 'team_limit',]
-    functions = ['time_per_pick_s', 'draft_start', 'teams']
+    functions = ['time_per_pick_s', 'draft_start', 'teams', 'roster',]
 
     def get_time_per_pick_s(self):
         return self.db_object.time_per_pick
@@ -58,6 +61,9 @@ class JsonFantasyDraft(JsonObject):
     def get_draft_start(self):
         pass
 
+    def get_roster(self):
+        pass
+
 
 class JsonFantasyTeam(JsonObject):
     fields = ['name', 'email']
@@ -72,7 +78,10 @@ class JsonFantasyTeam(JsonObject):
 
 class JsonFantasyPick(JsonObject):
     fields = ['pick_number',]
-    functions = ['team', 'expires',]
+    functions = ['team', 'expires', 'starts',]
+
+    def get_starts(self):
+        pass
 
     def get_expires(self):
         pass
@@ -84,7 +93,7 @@ class JsonFantasyPick(JsonObject):
 class PickBuilder(JsonObject):
     """Accumulates a list of picks associated with a draft
     Constructor argument should be a FantasyDraft model object"""
-    functions = ['picks', 'selections', 'pagination',]
+    functions = ['picks', 'selections',]
 
     # These will be for the draft db object, so suppress them
     show_name = False
@@ -99,19 +108,26 @@ class PickBuilder(JsonObject):
         return pick_json
 
     def get_selections(self):
-        pass
+        selections_json = []
+        selections = models.FantasySelection.objects.filter(
+            draft_pick__fantasy_team__draft=self.db_object)
+        for selection in selections:
+            json_selection = JsonFantasySelection(selection)
+            selections_json.append(json_selection.json_dict())
+        return selections_json
 
 class JsonFantasySelection(JsonObject):
-    fields = ['when',]
-    functions = ['team', 'draft_pick', 'player']
+    functions = ['team', 'draft_pick', 'player', 'when',]
 
     def get_team(self):
-        return JsonFantasyTeam(self.db_object.fantasy_team).json_dict()
+        return JsonFantasyTeam(self.db_object.draft_pick.fantasy_team).json_dict()
 
     def get_draft_pick(self):
         pick = JsonFantasyPick(self.db_object.draft_pick)
-        pick.show_team = False
         return pick.json_dict()
 
     def get_player(self):
         return nfl.JsonNflPlayer(self.db_object.player).json_dict()
+
+    def get_when(self):
+        pass
