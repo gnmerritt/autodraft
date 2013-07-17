@@ -1,3 +1,5 @@
+from __future__ import division
+import math
 from draftHost import models
 from json import JsonObject
 import fantasy
@@ -28,3 +30,58 @@ class PickBuilder(JsonObject):
             json_selection = fantasy.JsonFantasySelection(selection)
             selections_json.append(json_selection.json_dict())
         return selections_json
+
+
+class PickAssigner(object):
+    """Assigns picks for a draft"""
+    def __init__(self, db_draft):
+        self.db_draft = db_draft
+
+    def build_teams_from_db(self):
+        self.teams = models.FantasyTeam.objects.filter(draft=self.db_draft)
+
+    def assign_picks(self):
+        """Assigns picks and returns a list of the dict objects"""
+        start_time = self.db_draft.draft_start
+        time_increment_s = self.db_draft.time_per_pick
+        total_picks = len(self.teams) * self.db_draft.rounds
+        picks = []
+
+        for i in range(1, total_picks + 1):
+            pick_start = start_time + (time_increment_s * i)
+            pick_expires = pick_start + time_increment_s
+            team = self.get_team_for_pick(i)
+            pick_dict = {
+                "starts": pick_start,
+                "expires": pick_expires,
+                "pick_number": i,
+                "team": team,
+            }
+            picks.append(pick_dict)
+
+        return picks
+
+    def get_team_for_pick(self, pick_number):
+        num_teams = len(self.teams)
+        current_round = math.ceil(pick_number / num_teams)
+        round_pick = pick_number % num_teams
+        if round_pick == 0:
+            round_pick = num_teams
+
+        # Depending on odd/even round, get the next team from the beginning
+        # or end of the list of teams
+        if current_round % 2 == 1:
+            index = round_pick - 1
+        else:
+            index = num_teams - round_pick
+
+        return self.teams[index]
+
+    def create_picks(self, pick_list):
+        """Creates the DB pick objects given a list of dicts"""
+        for pick_dict in pick_list:
+            pick, created = models.FantasyPick.objects.get_or_create(**pick_dict)
+            if created:
+                print "created pick! {p}".format(p=pick)
+            else:
+                print "got pick {p}".format(p=pick)

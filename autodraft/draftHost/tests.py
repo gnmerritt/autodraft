@@ -1,6 +1,7 @@
 from django.test import TestCase
 
 from draftHost.logic.json import JsonObject
+import draftHost.logic.draft as draft
 
 class JsonObjectTest(TestCase):
     """Tests for the JsonObject magic"""
@@ -94,3 +95,35 @@ class JsonObjectTest(TestCase):
         for key in expected:
             self.assertIn(key, out_dict)
             self.assertEquals(out_dict[key], key)
+
+class MockDbDraft(object):
+    def __init__(self, num_teams):
+        self.rounds = 10
+        self.draft_start = 0
+        self.time_per_pick = 60 # seconds
+
+class PickAssignerTest(TestCase):
+    def setUp(self):
+        self.num_teams = 10
+        self.mock_draft = MockDbDraft(self.num_teams)
+        self.mock_draft.rounds = 3
+
+        self.teams = range(1, self.num_teams + 1)
+
+        self.assigner = draft.PickAssigner(self.mock_draft)
+        self.assigner.teams = self.teams
+
+    def test_team_for_pick(self):
+        round_1 = self.teams
+        round_2 = range(self. num_teams, 0, -1)
+        expected_picks = round_1 + round_2 + round_1
+        picks = range(1, self.num_teams * self.mock_draft.rounds + 1)
+
+        for i, pick in enumerate(picks):
+            expected = expected_picks[i]
+            actual = self.assigner.get_team_for_pick(pick)
+            self.assertEquals(expected, actual, "expected:{e}, got:{a} for pick {p}"
+                              .format(e=expected, a=actual, p=pick))
+
+    def test_assign_picks(self):
+        pass
