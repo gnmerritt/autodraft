@@ -39,7 +39,7 @@ class JsonFantasyRoster(JsonObject):
 
 class JsonFantasyDraft(JsonObject):
     fields = ['admin', 'team_limit',]
-    functions = ['time_per_pick_s', 'draft_start', 'teams', 'roster',]
+    functions = ['time_per_pick_s', 'draft_start', 'teams', 'roster', 'current_time',]
 
     def get_time_per_pick_s(self):
         return self.db_object.time_per_pick
@@ -63,6 +63,9 @@ class JsonFantasyDraft(JsonObject):
 
     def get_roster(self):
         pass
+
+    def get_current_time(self):
+        pass ## TODO for clients to sync to
 
 
 class JsonFantasyTeam(JsonObject):
