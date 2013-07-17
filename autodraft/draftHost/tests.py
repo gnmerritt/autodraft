@@ -107,23 +107,33 @@ class PickAssignerTest(TestCase):
         self.num_teams = 10
         self.mock_draft = MockDbDraft(self.num_teams)
         self.mock_draft.rounds = 3
+        self.mock_draft.draft_start = 0
+        self.mock_draft.time_per_pick = 120
 
         self.teams = range(1, self.num_teams + 1)
-
         self.assigner = draft.PickAssigner(self.mock_draft)
         self.assigner.teams = self.teams
+
+        self.picks = range(1, self.num_teams * self.mock_draft.rounds + 1)
 
     def test_team_for_pick(self):
         round_1 = self.teams
         round_2 = range(self. num_teams, 0, -1)
         expected_picks = round_1 + round_2 + round_1
-        picks = range(1, self.num_teams * self.mock_draft.rounds + 1)
 
-        for i, pick in enumerate(picks):
+        for i, pick in enumerate(self.picks):
             expected = expected_picks[i]
             actual = self.assigner.get_team_for_pick(pick)
             self.assertEquals(expected, actual, "expected:{e}, got:{a} for pick {p}"
                               .format(e=expected, a=actual, p=pick))
 
-    def test_assign_picks(self):
-        pass
+    def test_time_for_pick(self):
+        time_pp = self.mock_draft.time_per_pick
+        expected_starts = range(0, time_pp*len(self.picks), time_pp)
+        expected_expires = range(time_pp, time_pp*(len(self.picks) + 1), time_pp)
+
+        for i, pick in enumerate(self.picks):
+            start, expire = self.assigner.get_times_for_pick(pick)
+            self.assertEquals(expected_starts[i], start,
+                              "saw start {s} at pick {p}".format(s=start, p=pick))
+            self.assertEquals(expected_expires[i], expire)
