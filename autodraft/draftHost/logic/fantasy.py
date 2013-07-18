@@ -1,39 +1,8 @@
-import datetime.datetime as time
+import datetime as d
 
 from draftHost import models
 from json import JsonObject
 import nfl, draft
-
-
-class AuthContext(object):
-    """Fetches the current team & draft from the request"""
-    def __init__(self, request):
-        self.request = request
-        self.find_key_from_req()
-        self.find_team_from_key()
-        self.find_draft_from_team()
-
-    def find_key_from_req(self):
-        self.key = self.request.GET.get('key')
-        if not self.key:
-            self.key = self.request.POST.get('key')
-
-    def find_team_from_key(self):
-        if self.key:
-            teams = models.FantasyTeam.objects.filter(auth_key=self.key)
-            if teams:
-                self.team = teams[0]
-                return
-        self.team = None
-
-    def find_draft_from_team(self):
-        if self.team:
-            self.draft = self.team.draft
-        else:
-            self.draft = None
-
-    def is_valid(self):
-        return self.team is not None and self.draft is not None
 
 
 class JsonTime(JsonObject):
@@ -85,7 +54,7 @@ class JsonFantasyDraft(JsonObject):
         return JsonFantasyRoster(self.db_object.roster).json_dict()
 
     def get_current_time(self):
-        return JsonTime(time.now()).json_dict()
+        return JsonTime(d.datetime.now()).json_dict()
 
 
 class JsonFantasyTeam(JsonObject):

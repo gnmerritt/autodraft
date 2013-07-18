@@ -6,7 +6,7 @@ import draftHost.models as models
 import draftHost.logic.nfl as nfl
 import draftHost.logic.fantasy as fantasy
 import draftHost.logic.draft as drafter
-from draftHost.logic.fantasy import AuthContext as AuthContext
+from draftHost.logic.auth import AuthContext as AuthContext
 
 def get_context_or_error(request):
     """Tries to build a AuthContext, raises an error on failure"""
