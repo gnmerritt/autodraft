@@ -93,3 +93,15 @@ class JsonObject(object):
                 pass
 
         return json_dict
+
+
+class JsonTime(JsonObject):
+    """Standard time representation, input object should be a
+    datetime.datetime"""
+    functions = ['utc', 'str']
+
+    def get_utc(self):
+        pass
+
+    def get_str(self):
+        pass

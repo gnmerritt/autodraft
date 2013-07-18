@@ -1,20 +1,8 @@
 import datetime as d
 
 from draftHost import models
-from json import JsonObject
+from json import JsonObject, JsonTime
 import nfl, draft
-
-
-class JsonTime(JsonObject):
-    """Standard time representation, input object should be a
-    datetime.datetime"""
-    functions = ['utc', 'str']
-
-    def get_utc(self):
-        pass
-
-    def get_str(self):
-        pass
 
 
 class JsonFantasyRoster(JsonObject):
