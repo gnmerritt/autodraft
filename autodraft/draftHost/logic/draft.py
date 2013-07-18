@@ -16,22 +16,37 @@ class PickBuilder(JsonObject):
     show_name = False
     show_id = False
 
-    def get_picks(self):
+    def get_picks(self, isTeam=False, options={}):
         pick_json = []
-        picks = models.FantasyPick.objects.filter(fantasy_team__draft=self.db_object)
+        if isTeam:
+            picks = models.FantasyPick.objects.filter(
+                fantasy_team=self.db_object)
+        else:
+            picks = models.FantasyPick.objects.filter(
+                fantasy_team__draft=self.db_object)
         for pick in picks:
             json_pick = fantasy.JsonFantasyPick(pick)
+            self.add_options(options, json_selection)
             pick_json.append(json_pick.json_dict())
         return pick_json
 
-    def get_selections(self):
+    def get_selections(self, isTeam=False, options={}):
         selections_json = []
-        selections = models.FantasySelection.objects.filter(
-            draft_pick__fantasy_team__draft=self.db_object)
+        if isTeam:
+            selections = models.FantasySelection.objects.filter(
+                draft_pick__fantasy_team__draft=self.db_object.draft)
+        else:
+            selections = models.FantasySelection.objects.filter(
+                draft_pick__fantasy_team__draft=self.db_object)
         for selection in selections:
             json_selection = fantasy.JsonFantasySelection(selection)
+            self.add_options(options, json_selection)
             selections_json.append(json_selection.json_dict())
         return selections_json
+
+    def add_options(self, options, json_object):
+        for k, v in options.iteritems():
+            json_object[k] = v
 
 
 class PickAssigner(object):
