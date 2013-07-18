@@ -2,8 +2,8 @@ import time
 import simplejson as json
 from django.http import HttpResponse
 
+
 def obj_to_json(object):
-    # TODO: add data/pagination objects
     return HttpResponse(json.dumps(object), mimetype="application/json")
 
 
