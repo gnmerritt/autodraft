@@ -1,5 +1,6 @@
-from django.http import HttpResponse
+import time
 import simplejson as json
+from django.http import HttpResponse
 
 def obj_to_json(object):
     # TODO: add data/pagination objects
@@ -95,13 +96,28 @@ class JsonObject(object):
         return json_dict
 
 
+# from http://stackoverflow.com/questions/5067218/get-utc-timestamp-in-python-with-datetime:
+
+def utc_mktime(utc_tuple):
+    """Returns number of seconds elapsed since epoch
+    Note that no timezone are taken into consideration.
+    utc tuple must be: (year, month, day, hour, minute, second)
+    """
+    if len(utc_tuple) == 6:
+        utc_tuple += (0, 0, 0)
+    return time.mktime(utc_tuple) - time.mktime((1970, 1, 1, 0, 0, 0, 0, 0, 0))
+
+def datetime_to_timestamp(dt):
+    """Converts a datetime object to UTC timestamp"""
+    return int(utc_mktime(dt.timetuple()))
+
 class JsonTime(JsonObject):
     """Standard time representation, input object should be a
     datetime.datetime"""
     functions = ['utc', 'str']
 
     def get_utc(self):
-        pass
+        return datetime_to_timestamp(self.db_object)
 
     def get_str(self):
-        pass
+        return unicode(self.db_object)
