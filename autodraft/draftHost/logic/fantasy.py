@@ -34,7 +34,8 @@ class AuthContext(object):
         return self.team is not None and self.draft is not None
 
 class JsonFantasyRoster(JsonObject):
-    pass ## TODO
+    fields = ['slots',]
+    show_id = False
 
 
 class JsonFantasyDraft(JsonObject):
@@ -62,7 +63,7 @@ class JsonFantasyDraft(JsonObject):
         pass
 
     def get_roster(self):
-        pass
+        return JsonFantasyRoster(self.db_object.roster).json_dict()
 
     def get_current_time(self):
         pass ## TODO for clients to sync to

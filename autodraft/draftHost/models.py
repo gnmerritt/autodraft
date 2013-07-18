@@ -69,7 +69,8 @@ class ExternalNflPlayer(models.Model):
 
 
 class FantasyRoster(models.Model):
-    models.TextField() ## TODO: this should be more than a text field?
+    description = models.TextField() ## TODO: this should be more than a text field?
+    slots = models.PositiveIntegerField()
 
 
 class FantasyDraft(models.Model):
