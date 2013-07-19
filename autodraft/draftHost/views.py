@@ -1,5 +1,5 @@
 from django.http import HttpResponse
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, render
 import django.http.response
 
 import draftHost.models as models
@@ -57,5 +57,6 @@ def team_response(db_team):
     return json_team.json_response()
 
 def register(request):
-    ## TODO
-    return HttpResponse("hello, registration form")
+    #    open_drafts = models.FantasyDraft.objects
+    context = {}
+    return render(request, 'draftHost/registration.html', context)
