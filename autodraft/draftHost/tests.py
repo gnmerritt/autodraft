@@ -4,6 +4,7 @@ from django.test import TestCase
 from draftHost.logic.json import JsonObject, JsonTime
 import draftHost.logic.draft as draft
 
+
 class JsonObjectTest(TestCase):
     """Tests for the JsonObject magic"""
 

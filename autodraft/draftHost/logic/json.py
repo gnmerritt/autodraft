@@ -111,6 +111,7 @@ def datetime_to_timestamp(dt):
     """Converts a datetime object to UTC timestamp"""
     return int(utc_mktime(dt.timetuple()))
 
+
 class JsonTime(JsonObject):
     """Standard time representation, input object should be a
     datetime.datetime"""

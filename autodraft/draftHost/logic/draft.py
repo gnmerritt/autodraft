@@ -61,7 +61,7 @@ class PickAssigner(object):
 
     def assign_picks(self):
         """Assigns picks and returns a list of the dict objects"""
-        total_picks = len(self.teams) * self.db_draft.rounds
+        total_picks = len(self.teams) * self.db_draft.roster.slots
         picks = []
 
         for i in range(1, total_picks + 1):
