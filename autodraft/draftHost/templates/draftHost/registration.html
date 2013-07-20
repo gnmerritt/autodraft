@@ -1,1 +1,9 @@
-Hello, template
+<h1>Active Drafts</h1>
+
+<ul>
+{% for draft in drafts %}
+<li>
+  {{ draft.name }}
+</li>
+{% endfor %}
+</ul>

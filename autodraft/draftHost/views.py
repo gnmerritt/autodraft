@@ -57,6 +57,8 @@ def team_response(db_team):
     return json_team.json_response()
 
 def register(request):
-    #    open_drafts = models.FantasyDraft.objects
-    context = {}
+    drafts = models.FantasyDraft.objects.all()
+    context = {
+        'drafts': drafts,
+    }
     return render(request, 'draftHost/registration.html', context)
