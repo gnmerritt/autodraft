@@ -41,9 +41,27 @@
     {% if draft.teams|length < draft.team_limit %}
     <tr>
       <td>
-        <span>Spots still open for this draft -- </span>
-        <a href="{% url 'draftHost:register' draft.id %}">Register Here</a>
+        <span>Spots still open for this draft -- Register below:</span>
       </td>
+    </tr>
+    <tr>
+      <form class="register">
+        <input type="hidden" name="draft-id" value="{{ draft.id }}"/>
+
+        <td>
+          <label for="name">Team name:</label>
+          <input type="text" name="name" value="{{ team.name }}"/>
+        </td>
+
+        <td>
+          <label for="email">Email:</label>
+          <input type="email" name="email" placeholder="(will be obfuscated)" value="{{ team.email }}" />
+        </td>
+
+        <td>
+          <input type="submit" value="Register"/>
+        </td>
+      </form>
     </tr>
     {% endif %}
   </table>

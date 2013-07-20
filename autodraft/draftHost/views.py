@@ -68,7 +68,7 @@ def draft_page(request):
     }
     return render(request, 'draftHost/draft_page.html', context)
 
-def register(request, draft_id):
+def register(request, draft_id, name, email):
     draft = get_object_or_404(models.FantasyDraft, pk=draft_id)
     draft_json = fantasy.JsonFantasyDraft(draft).json_dict()
     context = {
