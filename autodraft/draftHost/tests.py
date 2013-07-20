@@ -1,7 +1,8 @@
 import datetime
 from django.test import TestCase
 
-from draftHost.logic.json import JsonObject, JsonTime
+import draftHost.logic.json as json
+from draftHost.logic.json import JsonObject
 import draftHost.logic.draft as draft
 
 
@@ -102,10 +103,10 @@ class JsonObjectTest(TestCase):
 class JsonTimeTest(TestCase):
     def test_time_json(self):
         date = datetime.datetime(2008, 1, 1, 0, 0, 0, 0)
-        json = JsonTime(date)
+        json_time = json.JsonTime(date)
         self.assertEqual({'str': u'2008-01-01 00:00:00',
                           'utc': 1199145600},
-                         json.json_dict())
+                         json_time.json_dict())
 
 
 class MockDbDraft(object):
@@ -150,3 +151,17 @@ class PickAssignerTest(TestCase):
             self.assertEqual(expected_starts[i], start,
                               "saw start {s} at pick {p}".format(s=start, p=pick))
             self.assertEqual(expected_expires[i], expire)
+
+
+class EmailMaskerTest(TestCase):
+    def test_unmatching_email(self):
+        email = "nathan.at.bingo.too.long"
+        masker = json.EmailMasker(email)
+        self.assertEqual(masker.email, email)
+        self.assertEqual(masker.masked, "XXXX")
+
+    def test_normal_email(self):
+        email = "darktemplar@chemist.com"
+        masker = json.EmailMasker(email)
+        self.assertEqual(masker.email, email)
+        self.assertEqual(masker.masked, "darktemplar@XXXX.com")

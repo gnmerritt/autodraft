@@ -1,9 +1,22 @@
+<style type="text/css">
+  .teams { padding:5px; border:1px solid #333; }
+</style>
+
 <h1>Active Drafts</h1>
 
 <ul>
 {% for draft in drafts %}
 <li>
   {{ draft.name }}
+
+  <table class="teams">
+  {% for team in draft.teams %}
+  <tr>
+    <td>{{ team.name }}</td>
+    <td>{{ team.email }}</td>
+  </tr>
+  {% endfor %}
+  <table>
 </li>
 {% endfor %}
 </ul>

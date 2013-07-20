@@ -1,4 +1,4 @@
-import time
+import time, re
 import simplejson as json
 from django.http import HttpResponse
 
@@ -122,3 +122,15 @@ class JsonTime(JsonObject):
 
     def get_str(self):
         return unicode(self.db_object)
+
+class EmailMasker(object):
+    ADDRESS = r'.*@(.*)\.\w+'
+
+    def __init__(self, email):
+        self.email = email
+        match = re.match(self.ADDRESS, (email))
+        if not match or not match.group(1):
+            # Don't fall back to the full email
+            self.masked = "XXXX"
+        else:
+            self.masked = self.email.replace(match.group(1), "XXXX")

@@ -1,7 +1,7 @@
 import datetime as d
 
 from draftHost import models
-from json import JsonObject, JsonTime
+from json import JsonObject, JsonTime, EmailMasker
 import nfl, draft
 
 
@@ -46,9 +46,17 @@ class JsonFantasyDraft(JsonObject):
 
 
 class JsonFantasyTeam(JsonObject):
-    fields = ['name', 'email']
-    functions = ['picks', 'selections', 'draft']
+    fields = ['name',]
+    functions = ['picks', 'selections', 'draft', 'email',]
     pick_options = { 'show_team': False, }
+
+    mask_email = True
+
+    def get_email(self):
+        email = self.db_object.email
+        if self.mask_email:
+            return EmailMasker(email).masked
+        return email
 
     def get_picks(self):
         picks = draft.PickBuilder(self.db_object)

@@ -57,7 +57,8 @@ def team_response(db_team):
     return json_team.json_response()
 
 def register(request):
-    drafts = models.FantasyDraft.objects.all()
+    drafts = [fantasy.JsonFantasyDraft(k).json_dict()
+              for k in models.FantasyDraft.objects.all()]
     context = {
         'drafts': drafts,
     }
