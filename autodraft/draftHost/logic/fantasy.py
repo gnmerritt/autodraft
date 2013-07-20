@@ -2,6 +2,7 @@ import datetime as d
 
 from draftHost import models
 from json import JsonObject, JsonTime, EmailMasker
+from performance import ReadOnlyCachedAttribute
 import nfl, draft
 
 
@@ -18,22 +19,20 @@ class JsonFantasyDraft(JsonObject):
                  'draft_start',
                  'current_time',]
 
+    @ReadOnlyCachedAttribute
+    def teams(self):
+        return models.FantasyTeam.objects.filter(draft=self.db_object)
+
     def get_time_per_pick_s(self):
         return self.db_object.time_per_pick
 
-    def get_team_db_objects(self):
-        return models.FantasyTeam.objects.filter(draft=self.db_object)
-
     def get_teams(self):
-        teams = self.get_team_db_objects()
         json = []
-        for team in teams:
+        for team in self.teams:
             j = JsonFantasyTeam(team)
-            j.show_draft = False # already showing the draft...
+            j.show_draft_id = False # already showing the draft...
             json.append(j.json_dict())
-        if json:
-            return json
-        return None
+        return json
 
     def get_draft_start(self):
         return JsonTime(self.db_object.draft_start).json_dict()
@@ -47,10 +46,14 @@ class JsonFantasyDraft(JsonObject):
 
 class JsonFantasyTeam(JsonObject):
     fields = ['name',]
-    functions = ['picks', 'selections', 'draft', 'email',]
+    functions = ['picks', 'selections', 'draft_id', 'email',]
     pick_options = { 'show_team': False, }
 
     mask_email = True
+
+    @ReadOnlyCachedAttribute
+    def builder(self):
+        return draft.PickBuilder(self.db_object)
 
     def get_email(self):
         email = self.db_object.email
@@ -59,18 +62,14 @@ class JsonFantasyTeam(JsonObject):
         return email
 
     def get_picks(self):
-        picks = draft.PickBuilder(self.db_object)
-        return picks.get_picks(isTeam=True,
-                               options=self.pick_options)
+        return self.builder.get_picks(isTeam=True,
+                                      options=self.pick_options)
 
     def get_selections(self):
-        picks = draft.PickBuilder(self.db_object)
-        return picks.get_selections(isTeam=True)
+        return self.builder.get_selections(isTeam=True)
 
-    def get_draft(self):
-        selections = PickBuilder(self.db_object)
-        return selections.get_selections(isTeam=True,
-                                         options=self.pick_options)
+    def get_draft_id(self):
+        return self.db_object.draft.id
 
 
 class JsonFantasyPick(JsonObject):

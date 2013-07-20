@@ -60,10 +60,18 @@ def team_response(db_team):
     json_team = fantasy.JsonFantasyTeam(db_team)
     return json_team.json_response()
 
-def register(request):
+def draft_page(request):
     drafts = [fantasy.JsonFantasyDraft(k).json_dict()
               for k in models.FantasyDraft.objects.all()]
     context = {
         'drafts': drafts,
     }
-    return render(request, 'draftHost/registration.html', context)
+    return render(request, 'draftHost/draft_page.html', context)
+
+def register(request, draft_id):
+    draft = get_object_or_404(models.FantasyDraft, pk=draft_id)
+    draft_json = fantasy.JsonFantasyDraft(draft).json_dict()
+    context = {
+        'draft': draft_json,
+    }
+    return render(request, 'draftHost/register.html', context)

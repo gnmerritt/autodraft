@@ -13,5 +13,6 @@ urlpatterns = patterns('',
     url(r'^team/(?P<name>.*)/?$', 'team_info_name'),
     url(r'^team/?$', 'current_team'),
     # HTML views
-    url(r'^register/?$', views.register, name='register'),
+    url(r'^register/(?P<draft_id>\d+)/?', views.register, name='register'),
+    url(r'^/?$', views.draft_page, name='draft_page'),
 )
