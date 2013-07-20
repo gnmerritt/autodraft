@@ -20,6 +20,10 @@ def draft(request):
     context = get_context_or_error(request)
     return fantasy.JsonFantasyDraft(context.draft).json_response()
 
+def draft_id(request, id):
+    draft = get_object_or_404(models.FantasyDraft, pk=id)
+    return fantasy.JsonFantasyDraft(draft).json_response()
+
 def picks(request):
     context = get_context_or_error(request)
     picks = drafter.PickBuilder(context.draft)
@@ -40,7 +44,7 @@ def search(request, query):
     ## TODO
     return HttpResponse("search/{q}".format(q=query))
 
-def team_info_id(request, id):
+def team_id(request, id):
     team = get_object_or_404(models.FantasyTeam, pk=id)
     return team_response(team)
 
