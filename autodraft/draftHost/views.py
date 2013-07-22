@@ -87,8 +87,10 @@ def register(request):
             creator = fantasy.FantasyTeamCreator(form.cleaned_data)
             team = creator.create_team()
             if team:
-                args = {}
-                private_team_page = reverse('draftHost:team_html', kwargs=args)
+                args = {
+                    'key': team.auth_key,
+                }
+                private_team_page = reverse('draftHost:my_team', kwargs=args)
                 return HttpResponseRedirect(private_team_page)
             else:
                 return HttpResponseRedirect(reverse('draftHost:draft_page'))

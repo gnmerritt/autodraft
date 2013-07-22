@@ -79,15 +79,16 @@ class FantasyTeamCreator(object):
         self.data = team_form_data
 
     def create_team(self):
+        """Creates and returns the new team or None on error"""
         draft = models.FantasyDraft.objects.get(pk=self.data['draft_id'])
         if draft:
             del self.data['draft_id']
             self.data['draft'] = draft
             self.data['auth_key'] = self.get_auth_key()
-            team = models.FantasyTeam.objects.get_or_create(**self.data)
-            return True
+            team, created = models.FantasyTeam.objects.get_or_create(**self.data)
+            return team
         else:
-            return False
+            return None
 
     def get_auth_key(self):
         key = uuid.uuid4()
