@@ -8,6 +8,7 @@ virtualenv --no-site-packages venv/
 source venv/bin/activate
 
 easy_install ipython django South simplejson readline
+easy_install django-nose
 
 echo "All set, now to get started do:"
 echo "  source venv/bin/activate"
