@@ -15,7 +15,7 @@ def get_context_or_error(request):
      ## TODO - this should probably be a different error
     raise django.http.response.BadHeaderError("invalid auth key")
 
-def draft(request):
+def draft_key(request):
     context = get_context_or_error(request)
     return fantasy.JsonFantasyDraft(context.draft).json_response()
 
@@ -61,8 +61,10 @@ def team_response(db_team):
 
 def my_team(request, key):
     team = get_object_or_404(models.FantasyTeam, auth_key=key)
+    draft = fantasy.JsonFantasyDraft(team.draft)
     context = {
         'team': team,
+        'draft': draft.json_dict(),
     }
     return render(request, 'draftHost/team_page.html', context)
 

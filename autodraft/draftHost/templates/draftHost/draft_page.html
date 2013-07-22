@@ -7,20 +7,7 @@
 <ul class="draftList">
 {% for draft in drafts %}
 <li>
-  <div class="draft">
-    <div>
-      <span class="name">{{ draft.name }}</span>
-      <span class="admin"> - run by {{ draft.admin }}</span>
-      <a href="{% url 'draftHost:draft_id' draft.id %}">JSON Link</a>
-    </div>
-    <div class="details">
-      <div>Roster: {{ draft.roster.description }} ({{ draft.roster.slots }} slots)</div>
-      <div>
-        <span>Draft starts at {{ draft.draft_start.str }},</span>
-        <span>{{ draft.time_per_pick_s }} seconds / pick</span>
-      </div>
-    </div>
-  </div>
+  {% include 'draftHost/draft_info.html' %}
 
   <div>Current teams ({{ draft.teams|length }} / {{ draft.team_limit }}):</div>
 
