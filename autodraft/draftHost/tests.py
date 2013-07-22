@@ -1,7 +1,10 @@
+import datetime
 from django.test import TestCase
 
+import draftHost.logic.json as json
 from draftHost.logic.json import JsonObject
 import draftHost.logic.draft as draft
+
 
 class JsonObjectTest(TestCase):
     """Tests for the JsonObject magic"""
@@ -9,7 +12,7 @@ class JsonObjectTest(TestCase):
     def test_constructor(self):
         db_dict = {}
         json_object = JsonObject(db_dict)
-        self.assertEquals(json_object.db_object, db_dict)
+        self.assertEqual(json_object.db_object, db_dict)
 
     def test_subclass_constructor(self):
         """Verifies that python isn't playing any tricks on us re: subclasses"""
@@ -19,8 +22,8 @@ class JsonObjectTest(TestCase):
 
         subclass_dict = {'a':'b'}
         json_subclass = JsonSubclass(subclass_dict)
-        self.assertEquals(json_subclass.db_object, subclass_dict)
-        self.assertEquals(json_subclass.fields, expected)
+        self.assertEqual(json_subclass.db_object, subclass_dict)
+        self.assertEqual(json_subclass.fields, expected)
 
     def test_list_to_mapping(self):
         """Tests the list to mapping function"""
@@ -28,7 +31,7 @@ class JsonObjectTest(TestCase):
         out_dict = JsonObject({}).list_to_mapping_dict(in_list)
         for entry in in_list:
             self.assertIn(entry, out_dict)
-            self.assertEquals(out_dict[entry], entry)
+            self.assertEqual(out_dict[entry], entry)
 
     def test_eval_functions_to_dict(self):
         """Verifies that the function eval-er is running correctly"""
@@ -46,7 +49,7 @@ class JsonObjectTest(TestCase):
 
         for key in expected:
             self.assertIn(key, out_dict)
-            self.assertEquals(out_dict[key], key)
+            self.assertEqual(out_dict[key], key)
 
     def test_drop_null_values(self):
         """Make sure we drop any keys with null values"""
@@ -60,7 +63,7 @@ class JsonObjectTest(TestCase):
 
         test_obj = FuncJson({})
         out_dict = test_obj.json_dict()
-        self.assertEquals({}, out_dict)
+        self.assertEqual({}, out_dict)
 
     def test_skip_boolean(self):
         """Verify the show_{key} variable works and is default true"""
@@ -78,7 +81,7 @@ class JsonObjectTest(TestCase):
 
         for key in ['two', 'three']:
             self.assertIn(key, out_dict)
-            self.assertEquals(out_dict[key], key)
+            self.assertEqual(out_dict[key], key)
 
     def test_fields_variable(self):
         class MockDb:
@@ -94,13 +97,24 @@ class JsonObjectTest(TestCase):
 
         for key in expected:
             self.assertIn(key, out_dict)
-            self.assertEquals(out_dict[key], key)
+            self.assertEqual(out_dict[key], key)
+
+
+class JsonTimeTest(TestCase):
+    def test_time_json(self):
+        date = datetime.datetime(2008, 1, 1, 0, 0, 0, 0)
+        json_time = json.JsonTime(date)
+        self.assertEqual({'str': u'2008-01-01 00:00:00',
+                          'utc': 1199145600},
+                         json_time.json_dict())
+
 
 class MockDbDraft(object):
     def __init__(self, num_teams):
         self.rounds = 10
         self.draft_start = 0
         self.time_per_pick = 60 # seconds
+
 
 class PickAssignerTest(TestCase):
     def setUp(self):
@@ -124,7 +138,7 @@ class PickAssignerTest(TestCase):
         for i, pick in enumerate(self.picks):
             expected = expected_picks[i]
             actual = self.assigner.get_team_for_pick(pick)
-            self.assertEquals(expected, actual, "expected:{e}, got:{a} for pick {p}"
+            self.assertEqual(expected, actual, "expected:{e}, got:{a} for pick {p}"
                               .format(e=expected, a=actual, p=pick))
 
     def test_time_for_pick(self):
@@ -134,6 +148,20 @@ class PickAssignerTest(TestCase):
 
         for i, pick in enumerate(self.picks):
             start, expire = self.assigner.get_times_for_pick(pick)
-            self.assertEquals(expected_starts[i], start,
+            self.assertEqual(expected_starts[i], start,
                               "saw start {s} at pick {p}".format(s=start, p=pick))
-            self.assertEquals(expected_expires[i], expire)
+            self.assertEqual(expected_expires[i], expire)
+
+
+class EmailMaskerTest(TestCase):
+    def test_unmatching_email(self):
+        email = "nathan.at.bingo.too.long"
+        masker = json.EmailMasker(email)
+        self.assertEqual(masker.email, email)
+        self.assertEqual(masker.masked, "XXXX")
+
+    def test_normal_email(self):
+        email = "darktemplar@chemist.com"
+        masker = json.EmailMasker(email)
+        self.assertEqual(masker.email, email)
+        self.assertEqual(masker.masked, "darktemplar@XXXX.com")

@@ -79,7 +79,6 @@ class FantasyDraft(models.Model):
     draft_start = models.DateTimeField()
     time_per_pick = models.PositiveIntegerField()
     team_limit = models.PositiveIntegerField()
-    rounds = models.PositiveIntegerField()
     roster = models.ForeignKey(FantasyRoster)
 
     def __unicode__(self):
