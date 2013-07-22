@@ -1,0 +1,22 @@
+<form class="register" method="post" action="{% url 'draftHost:register' %}">
+  {% csrf_token %}
+  {{ form.non_field_errors }}
+
+  <input type="hidden" name="draft_id" value="{{ draft.id }}"/>
+
+  <td class="fieldWrapper">
+    {{ draft.registration.name.errors }}
+    <label for="name">Team name:</label>
+    {{ draft.registration.name }}
+  </td>
+
+  <td class="fieldWrapper">
+    {{ draft.registration.email.errors }}
+    <label for="email">Email:</label>
+    {{ draft.registration.email }}
+  </td>
+
+  <td>
+    <input type="submit" value="Register"/>
+  </td>
+</form>

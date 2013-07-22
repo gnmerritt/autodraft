@@ -2,7 +2,7 @@ from django.conf.urls import patterns, url
 
 from draftHost import views
 
-urlpatterns = patterns('',
+urlpatterns = patterns('draftHost.views',
     url(r'^draft/?$', views.draft, name='draft'),
     url(r'^draft/(?P<id>\d+)/?$', views.draft_id, name='draft_id'),
     url(r'^picks/?$', 'picks'),
@@ -13,6 +13,7 @@ urlpatterns = patterns('',
     url(r'^team/(?P<name>.*)/?$', 'team_info_name'),
     url(r'^team/?$', 'current_team'),
     # HTML views
-    url(r'^register/(?P<draft_id>\d+)/?', views.register, name='register'),
+    url(r'^my_team/(?P<key>[^/]+)/?$', views.my_team, name='my_team'),
+    url(r'^register/?$', views.register, name='register'),
     url(r'^/?$', views.draft_page, name='draft_page'),
 )

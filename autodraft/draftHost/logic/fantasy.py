@@ -1,4 +1,5 @@
 import datetime as d
+import uuid
 
 from draftHost import models
 from json import JsonObject, JsonTime, EmailMasker
@@ -70,6 +71,27 @@ class JsonFantasyTeam(JsonObject):
 
     def get_draft_id(self):
         return self.db_object.draft.id
+
+
+class FantasyTeamCreator(object):
+    """Adds a FantasyTeam to a draft given a team name & email"""
+    def __init__(self, team_form_data):
+        self.data = team_form_data
+
+    def create_team(self):
+        draft = models.FantasyDraft.objects.get(pk=self.data['draft_id'])
+        if draft:
+            del self.data['draft_id']
+            self.data['draft'] = draft
+            self.data['auth_key'] = self.get_auth_key()
+            team = models.FantasyTeam.objects.get_or_create(**self.data)
+            return True
+        else:
+            return False
+
+    def get_auth_key(self):
+        key = uuid.uuid4()
+        return str(key)
 
 
 class JsonFantasyPick(JsonObject):

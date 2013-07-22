@@ -1,3 +1,4 @@
+from django import forms
 from draftHost import models
 
 class AuthContext(object):
@@ -29,3 +30,9 @@ class AuthContext(object):
 
     def is_valid(self):
         return self.team is not None and self.draft is not None
+
+class TeamRegisterForm(forms.Form):
+    name = forms.CharField(max_length=80)
+    email = forms.EmailField(widget=forms.TextInput(
+        attrs={'placeholder': 'Will be obfuscated'}))
+    draft_id = forms.IntegerField()
