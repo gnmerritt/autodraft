@@ -39,6 +39,14 @@ def player(request, uid):
     json_player = nfl.JsonNflPlayer(db_player)
     return json_player.json_response()
 
+def player_status(request, uid):
+    db_player = get_object_or_404(models.NflPlayer, pk=uid)
+    context = get_context_or_error(request)
+    json_player = nfl.JsonNflPlayer(db_player)
+    json_player.draft = context.draft
+    json_player.show_fantasy_team = True
+    return json_player.json_response()
+
 def search(request, query):
     ## TODO
     return HttpResponse("search/{q}".format(q=query))
@@ -58,6 +66,9 @@ def current_team(request):
 def team_response(db_team):
     json_team = fantasy.JsonFantasyTeam(db_team)
     return json_team.json_response()
+
+def fantasy_team_players(request, id):
+    pass
 
 def nfl_teams(request):
     teams = models.NflTeam.objects.all()
@@ -129,7 +140,7 @@ def register(request):
             else:
                 return HttpResponseRedirect(reverse('draftHost:draft_page'))
 
-        raise django.http.response.BadHeaderError("BAD FORM") ## TODO
+        return draft_page(request)
     else:
         raise django.http.response.BadHeaderError("only POST allowed")
 

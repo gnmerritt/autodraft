@@ -1,18 +1,35 @@
 from json import JsonObject
 from draftHost import models
+import fantasy
 
 class JsonNflPosition(JsonObject):
     pass # No extra fields needed
 
 class JsonNflPlayer(JsonObject):
     fields = ['first_name', 'last_name']
-    functions = ['team', 'position']
+    functions = ['team', 'position', 'fantasy_team']
+
+    show_fantasy_team = False
+    draft = None
 
     def get_team(self):
         return JsonNflTeam(self.db_object.team).json_dict()
 
     def get_position(self):
         return JsonNflPosition(self.db_object.position).json_dict()
+
+    def get_fantasy_team(self):
+        if not self.draft:
+            return False
+        selections = models.FantasySelection.objects.filter(player=self.db_object)
+        if not selections:
+            return False
+        fantasy_team = selections[0].draft_pick.fantasy_team
+        json_team = fantasy.JsonFantasyTeam(fantasy_team)
+        # Only want the stub team info, shut off the other fields
+        json_team.show_picks = False
+        json_team.show_selections = False
+        return json_team.json_dict()
 
 
 class JsonNflTeam(JsonObject):
