@@ -4,7 +4,7 @@ from django.shortcuts import get_object_or_404, render
 import django.http.response
 
 from draftHost import models
-from draftHost.logic import nfl, fantasy, auth, draft
+from draftHost.logic import nfl, fantasy, auth, draft, json
 from draftHost.logic.auth import AuthContext as AuthContext
 
 def get_context_or_error(request):
@@ -58,6 +58,40 @@ def current_team(request):
 def team_response(db_team):
     json_team = fantasy.JsonFantasyTeam(db_team)
     return json_team.json_response()
+
+def nfl_teams(request):
+    teams = models.NflTeam.objects.all()
+    teams_json = [nfl.JsonNflTeam(t).json_dict() for t in teams]
+    return json.obj_to_json({'teams': teams_json})
+
+def nfl_team(request, id):
+    return nfl_team_with_players(request, id, include_players=False)
+
+def nfl_team_with_players(request, id, include_players=True):
+    team = get_object_or_404(models.NflTeam, pk=id)
+    print "got team {t}".format(t=team)
+    json_team = nfl.JsonNflTeam(team)
+    if include_players:
+        json_team.show_players = True
+    return json_team.json_response()
+
+def nfl_divisions(request):
+    divisions = models.NflDivision.objects.all()
+    divisons_json = [nfl.JsonNflDivision(d).json_dict()
+                     for d in divisions]
+    return json.obj_to_json({'divisions':divisons_json})
+
+def nfl_conferences(request):
+    conferences = models.NflConference.objects.all()
+    conferences_json = [nfl.JsonNflConference(c).json_dict()
+                        for c in conferences]
+    return json.obj_to_json({'conferences':conferences_json})
+
+def nfl_positions(request):
+    positions = models.NflPosition.objects.all()
+    positions_json = [nfl.JsonNflPosition(p).json_dict()
+                      for p in positions]
+    return json.obj_to_json({'positions':positions_json})
 
 def my_team(request, key):
     team = get_object_or_404(models.FantasyTeam, auth_key=key)
