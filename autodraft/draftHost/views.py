@@ -123,6 +123,7 @@ def draft_page(request):
                   if len(d['teams']) < d['team_limit']]:
         form = auth.TeamRegisterForm()
         draft['registration'] = form
+    drafts.sort(key=lambda d: d['draft_start']['utc'])
     context = {
         'drafts': drafts,
     }
