@@ -68,7 +68,10 @@ def team_response(db_team):
     return json_team.json_response()
 
 def fantasy_team_players(request, id):
-    pass
+    team = get_object_or_404(models.FantasyTeam, pk=id)
+    json_team = fantasy.JsonFantasyTeam(team)
+    json_team.show_players = True
+    return json_team.json_response()
 
 def nfl_teams(request):
     teams = models.NflTeam.objects.all()

@@ -30,9 +30,9 @@ class JsonFantasyDraft(JsonObject):
     def get_teams(self):
         json = []
         for team in self.teams:
-            j = JsonFantasyTeam(team)
-            j.show_draft_id = False # already showing the draft...
-            json.append(j.json_dict())
+            json_player = JsonFantasyTeam(team)
+            json_player.show_draft_id = False # already showing the draft...
+            json.append(json_player.json_dict())
         return json
 
     def get_draft_start(self):
@@ -47,9 +47,10 @@ class JsonFantasyDraft(JsonObject):
 
 class JsonFantasyTeam(JsonObject):
     fields = ['name',]
-    functions = ['picks', 'selections', 'draft_id', 'email',]
+    functions = ['pick_ids', 'selection_ids', 'draft_id', 'email', 'players']
     pick_options = { 'show_team': False, }
 
+    show_players = False
     mask_email = True
 
     @ReadOnlyCachedAttribute
@@ -62,15 +63,25 @@ class JsonFantasyTeam(JsonObject):
             return EmailMasker(email).masked
         return email
 
-    def get_picks(self):
-        return self.builder.get_picks(isTeam=True,
+    def get_pick_ids(self):
+        return self.builder.get_picks(is_team=True,
                                       options=self.pick_options)
 
-    def get_selections(self):
-        return self.builder.get_selections(isTeam=True)
+    def get_selection_ids(self):
+        return self.builder.get_selections(is_team=True)
 
     def get_draft_id(self):
         return self.db_object.draft.id
+
+    def get_players(self):
+        selections = self.builder.raw_selections(is_team=True)
+        players = [s.player for s in selections]
+        json_players = []
+        for p in players:
+            json_player = nfl.JsonNflPlayer(p)
+            json_player.show_team = False
+            json_players.append(json_player.json_dict())
+        return json_players
 
 
 class FantasyTeamCreator(object):
@@ -113,7 +124,8 @@ class JsonFantasySelection(JsonObject):
     functions = ['team', 'draft_pick', 'player', 'when',]
 
     def get_team(self):
-        return JsonFantasyTeam(self.db_object.draft_pick.fantasy_team).json_dict()
+        #return JsonFantasyTeam(self.db_object.draft_pick.fantasy_team).json_dict()
+        return None
 
     def get_draft_pick(self):
         pick = JsonFantasyPick(self.db_object.draft_pick)

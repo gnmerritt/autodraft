@@ -16,33 +16,31 @@ class PickBuilder(JsonObject):
     show_name = False
     show_id = False
 
-    def get_picks(self, isTeam=False, options={}):
-        pick_json = []
-        if isTeam:
+    def get_picks(self, is_team=False, options={}):
+        pick_ids = []
+        if is_team:
             picks = models.FantasyPick.objects.filter(
                 fantasy_team=self.db_object)
         else:
             picks = models.FantasyPick.objects.filter(
                 fantasy_team__draft=self.db_object)
         for pick in picks:
-            json_pick = fantasy.JsonFantasyPick(pick)
-            self.add_options(options, json_selection)
-            pick_json.append(json_pick.json_dict())
-        return pick_json
+            pick_ids.append(pick.id)
+        return pick_ids
 
-    def get_selections(self, isTeam=False, options={}):
-        selections_json = []
-        if isTeam:
-            selections = models.FantasySelection.objects.filter(
+    def get_selections(self, is_team=False, options={}):
+        selection_ids = []
+        for selection in self.raw_selections(is_team):
+            selection_ids.append(selection.id)
+        return selection_ids
+
+    def raw_selections(self, is_team):
+        if is_team:
+            return models.FantasySelection.objects.filter(
                 draft_pick__fantasy_team__draft=self.db_object.draft)
         else:
-            selections = models.FantasySelection.objects.filter(
+            return models.FantasySelection.objects.filter(
                 draft_pick__fantasy_team__draft=self.db_object)
-        for selection in selections:
-            json_selection = fantasy.JsonFantasySelection(selection)
-            self.add_options(options, json_selection)
-            selections_json.append(json_selection.json_dict())
-        return selections_json
 
     def add_options(self, options, json_object):
         for k, v in options.iteritems():
