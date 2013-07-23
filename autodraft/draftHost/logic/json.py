@@ -24,7 +24,7 @@ class JsonObject(object):
         """Checks the functions variable for a list of JSON keys
         For each key, check for a getter function, self.get_{key}()"""
         function_mapping = {}
-        for key in functions:
+        for key in [f for f in functions if self.is_enabled(f)]:
             func_name = "get_{f}".format(f=key)
             try:
                 func = getattr(self, func_name)
@@ -67,14 +67,16 @@ class JsonObject(object):
         """Check the show_{key} boolean to see if this key is disabled"""
         to_remove = []
         for key in in_dict:
-            show_name = "show_{f}".format(f=key)
-            included = not hasattr(self, show_name) or getattr(self, show_name)
-            if not included:
+            if not self.is_enabled(key):
                 to_remove.append(key)
         for key in to_remove:
             del in_dict[key]
-
         return in_dict
+
+    def is_enabled(self, key):
+        show_name = "show_{f}".format(f=key)
+        included = not hasattr(self, show_name) or getattr(self, show_name)
+        return included
 
     def json_response(self):
         json_dict = self.json_dict()
