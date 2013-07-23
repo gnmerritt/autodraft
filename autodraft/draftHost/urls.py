@@ -22,5 +22,6 @@ urlpatterns = patterns('draftHost.views',
     # HTML views
     url(r'^my_team/(?P<key>[^/]+)/?$', views.my_team, name='my_team'),
     url(r'^register/?$', views.register, name='register'),
+    url(r'^doc/$', views.documentation, name='documentation'),
     url(r'^/?$', views.draft_page, name='draft_page'),
 )

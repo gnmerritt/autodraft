@@ -132,3 +132,6 @@ def register(request):
         raise django.http.response.BadHeaderError("BAD FORM") ## TODO
     else:
         raise django.http.response.BadHeaderError("only POST allowed")
+
+def documentation(request):
+    return render(request, 'draftHost/documentation.html', {})
