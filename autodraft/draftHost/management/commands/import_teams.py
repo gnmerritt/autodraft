@@ -1,7 +1,7 @@
 from django.core.management.base import NoArgsCommand
 import simplejson as json
 
-from draftHost.models import NflConference, NflDivision, NflTeam
+from draftHost import models
 
 # path relative to manage.py
 DATA_FILE = "draftHost/data/teams.json"
@@ -34,7 +34,7 @@ class ConferenceImporter(object):
 
     def build(self):
         for c in self.CONFERENCES:
-            nfl_conference, created = NflConference.objects.get_or_create(**c)
+            nfl_conference, created = models.NflConference.objects.get_or_create(**c)
 
 
 class TeamImporter(object):
@@ -43,10 +43,10 @@ class TeamImporter(object):
 
     def build(self):
         for conference_abbr, data in self.json.iteritems():
-            conference = NflConference.objects.get(abbreviation=conference_abbr)
+            conference = models.NflConference.objects.get(abbreviation=conference_abbr)
 
             for division_name, teams in data.iteritems():
-                division, created_division = NflDivision.objects.get_or_create(
+                division, created_division = models.NflDivision.objects.get_or_create(
                     conference=conference,
                     name="{c} {d}".format(c=conference_abbr, d=division_name))
 
@@ -56,8 +56,24 @@ class TeamImporter(object):
     def add_team(self, division, team_data):
         team_data['division'] = division
         team_data['abbreviation'] = 'TODO'
-        _, created = NflTeam.objects.get_or_create(**team_data)
+        team, created = models.NflTeam.objects.get_or_create(**team_data)
+        self.add_defense(team)
         if created:
             print "adding {t} to {d}".format(t=team_data, d=division.name)
         else:
             print "got {t}".format(t=team_data)
+
+    def add_defense(self, team):
+        defense = models.NflPosition.objects.filter(abbreviation="DST")[0]
+        if defense:
+            defense_player = {
+                'position': defense,
+                'first_name': 'Defense/Special Teams',
+                'last_name': unicode(team),
+                'team':team,
+            }
+            _, created = models.NflPlayer.objects.get_or_create(**defense_player)
+            if created:
+                print "added defense for {t}".format(t=unicode(team))
+        else:
+            print "need to import positions in order to add defenses"
