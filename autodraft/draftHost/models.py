@@ -30,7 +30,7 @@ class NflTeam(models.Model):
 
 
 class NflPosition(models.Model):
-    """Football position e.g. RB or QB"""
+    """Football position e.g. RB, QB, S"""
     description = models.TextField()
     abbreviation = models.TextField(max_length=4)
 
@@ -38,12 +38,26 @@ class NflPosition(models.Model):
         return self.description
 
 
+class FantasyPosition(models.Model):
+    """Fantasy position - a simple subset of NflPositions"""
+    position = models.ForeignKey(NflPosition)
+
+    def __unicode__(self):
+        return unicode(self.position)
+
+class College(models.Model):
+    """A NCAA College"""
+    name = models.TextField(max_length=30)
+
+
 class NflPlayer(models.Model):
     """Draft-eligible NFL player"""
     first_name = models.TextField()
     last_name = models.TextField()
     team = models.ForeignKey(NflTeam)
+    school = models.ForeignKey(College)
     position = models.ForeignKey(NflPosition)
+    fantasy_position = models.ForeignKey(FantasyPosition)
 
     def __unicode__(self):
         return "{f} {l}".format(f=self.first_name, l=self.last_name)
@@ -66,6 +80,14 @@ class ExternalNflPlayer(models.Model):
     external_id = models.IntegerField()
     url = models.URLField()
     picture = models.URLField()
+
+
+class ExternalNflTeam(models.Model):
+    """Link to an external database's team info"""
+    team = models.ForeignKey(NflTeam)
+    db = models.ForeignKey(ExternalDatabase)
+    external_id = models.IntegerField()
+    url = models.URLField()
 
 
 class FantasyRoster(models.Model):

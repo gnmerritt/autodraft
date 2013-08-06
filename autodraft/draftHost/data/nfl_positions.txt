@@ -1,0 +1,32 @@
+1,Quarterback,QB
+2,Running Back,RB
+3,Fullback,FB
+4,Tight End,TE
+5,Offensive Guard,OG
+6,Offensive Tackle,OT
+7,Offensive Center,OC
+8,Long Snapper,LS
+9,Kicker,K
+10,Punter,P
+11,Wide Receiver,WR
+12,Kick Returner,KR
+13,Punt Returner,PR
+14,Defensive Tackle,DT
+15,4-3 Defensive End,DE
+16,Nose Tackle,NT
+17,3-4 Defensive End,DE
+18,3-4 Outside Linebacker,OLB
+19,4-3 Outside Linebacker,OLB
+20,Middle Linebacker,MLB
+21,Inside Linebacker,ILB
+22,Cornerback,CB
+23,Strong Safety,SS
+24,Free Safety,FS
+25,Athlete,ATH
+26,Offensive Line,OL
+27,Defensive Line,DL
+28,Defensive Back,DB
+29,Linebacker,LB
+30,Kickoff Specialist,KOS
+31,Safety,S
+32,Defense & Special Teams,DST
