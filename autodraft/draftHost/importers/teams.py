@@ -1,66 +1,22 @@
-from django.core.management.base import NoArgsCommand
 import simplejson as json
 
 from draftHost import models
 
-# path relative to manage.py
-TEAM_DATA_FILE = "draftHost/data/teams.json"
-COLLEGE_DATA_FILE = "draftHost/data/colleges.txt"
 
-class Command(NoArgsCommand):
-    def handle_noargs(self, **options):
-        conferences = ConferenceImporter()
-        conferences.build()
+class TeamImporter(object):
+    TEAM_DATA_FILE = "draftHost/data/teams.json"
 
-        colleges = CollegeImporter()
-        colleges.build()
-
-        teams = TeamImporter(self.load_json())
-        teams.build()
-
-        print "Conferences, Divisions & Teams added!"
+    def __init__(self):
+        self.json = self.load_json()
 
     def load_json(self):
         try:
-            json_file = open(TEAM_DATA_FILE, 'r')
+            json_file = open(self.TEAM_DATA_FILE, 'r')
             data = json.load(json_file)
             return data
         except IOError, e:
             print "got error {e}".format(e=e)
             return None
-
-class ConferenceImporter(object):
-    """Adds the conferences to the DB"""
-    CONFERENCES = [
-        {"name":"National Football Conference", "abbreviation":"NFC",},
-        {"name":"American Football Conference", "abbreviation":"AFC",},
-    ]
-
-    def build(self):
-        for c in self.CONFERENCES:
-            nfl_conference, created = models.NflConference.objects.get_or_create(**c)
-
-
-class CollegeImporter(object):
-    def build(self):
-        try:
-            data = open(COLLEGE_DATA_FILE, 'r')
-            for line in data:
-                parts = line.rstrip().split(',')
-                college, created = models.College.objects.get_or_create(
-                    id=parts[0],
-                    name=parts[1],
-                )
-                if created:
-                    print "created College {c}".format(c=college)
-            data.close()
-        except IOError, e:
-            print "got IOError {e}".format(e=e)
-
-
-class TeamImporter(object):
-    def __init__(self, json):
-        self.json = json
 
     def build(self):
         for conference_abbr, data in self.json.iteritems():
