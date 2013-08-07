@@ -1,6 +1,6 @@
 from django.core.management.base import NoArgsCommand
 
-from draftHost.importers import positions, conferences, colleges, teams
+from draftHost.importers import positions, conferences, colleges, teams, players
 
 
 class Command(NoArgsCommand):
@@ -25,3 +25,8 @@ class Command(NoArgsCommand):
         t.build()
 
         print "Teams added!"
+
+        p2 = players.PlayerImporter()
+        p2.add_players()
+
+        print "Players added!"
