@@ -4,12 +4,16 @@ import simplejson as json
 from draftHost import models
 
 # path relative to manage.py
-DATA_FILE = "draftHost/data/teams.json"
+TEAM_DATA_FILE = "draftHost/data/teams.json"
+COLLEGE_DATA_FILE = "draftHost/data/colleges.txt"
 
 class Command(NoArgsCommand):
     def handle_noargs(self, **options):
         conferences = ConferenceImporter()
         conferences.build()
+
+        colleges = CollegeImporter()
+        colleges.build()
 
         teams = TeamImporter(self.load_json())
         teams.build()
@@ -18,7 +22,7 @@ class Command(NoArgsCommand):
 
     def load_json(self):
         try:
-            json_file = open(DATA_FILE, 'r')
+            json_file = open(TEAM_DATA_FILE, 'r')
             data = json.load(json_file)
             return data
         except IOError, e:
@@ -35,6 +39,23 @@ class ConferenceImporter(object):
     def build(self):
         for c in self.CONFERENCES:
             nfl_conference, created = models.NflConference.objects.get_or_create(**c)
+
+
+class CollegeImporter(object):
+    def build(self):
+        try:
+            data = open(COLLEGE_DATA_FILE, 'r')
+            for line in data:
+                parts = line.rstrip().split(',')
+                college, created = models.College.objects.get_or_create(
+                    id=parts[0],
+                    name=parts[1],
+                )
+                if created:
+                    print "created College {c}".format(c=college)
+            data.close()
+        except IOError, e:
+            print "got IOError {e}".format(e=e)
 
 
 class TeamImporter(object):
@@ -60,20 +81,22 @@ class TeamImporter(object):
         self.add_defense(team)
         if created:
             print "adding {t} to {d}".format(t=team_data, d=division.name)
-        else:
-            print "got {t}".format(t=team_data)
 
     def add_defense(self, team):
-        defense = models.NflPosition.objects.filter(abbreviation="DST")[0]
-        if defense:
+        fantasy_defense = models.FantasyPosition.objects \
+          .filter(position__abbreviation="DST")[0]
+        college, _ = models.College.objects.get_or_create(name="Unknown")
+        if fantasy_defense:
             defense_player = {
-                'position': defense,
+                'position': fantasy_defense.position,
+                'fantasy_position': fantasy_defense,
                 'first_name': 'Defense/Special Teams',
                 'last_name': unicode(team),
                 'team':team,
+                'school': college,
             }
             _, created = models.NflPlayer.objects.get_or_create(**defense_player)
             if created:
-                print "added defense for {t}".format(t=unicode(team))
+                print "added fantasy_defense for {t}".format(t=unicode(team))
         else:
             print "need to import positions in order to add defenses"

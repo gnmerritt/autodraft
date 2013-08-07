@@ -7,6 +7,7 @@ admin.site.register(models.NflDivision)
 admin.site.register(models.NflTeam)
 admin.site.register(models.NflPosition)
 admin.site.register(models.NflPlayer)
+admin.site.register(models.College)
 
 # Links to external DBs:
 admin.site.register(models.ExternalDatabase)

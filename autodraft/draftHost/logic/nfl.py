@@ -5,9 +5,16 @@ import fantasy
 class JsonNflPosition(JsonObject):
     pass # No extra fields needed
 
+
+class JsonCollege(JsonObject):
+    pass # No extra fields needed
+
+
 class JsonNflPlayer(JsonObject):
     fields = ['first_name', 'last_name']
-    functions = ['team', 'position', 'fantasy_team']
+    functions = ['team', 'college',
+                 'nfl_position', 'fantasy_position',
+                 'fantasy_team',]
 
     show_fantasy_team = False
     draft = None
@@ -15,8 +22,14 @@ class JsonNflPlayer(JsonObject):
     def get_team(self):
         return JsonNflTeam(self.db_object.team).json_dict()
 
-    def get_position(self):
+    def get_nfl_position(self):
         return JsonNflPosition(self.db_object.position).json_dict()
+
+    def get_fantasy_position(self):
+        return self.db_object.fantasy_position.position.abbreviation
+
+    def get_college(self):
+        return JsonCollege(self.db_object.school).json_dict()
 
     def get_fantasy_team(self):
         if not self.draft:

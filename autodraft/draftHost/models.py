@@ -49,6 +49,8 @@ class College(models.Model):
     """A NCAA College"""
     name = models.TextField(max_length=30)
 
+    def __unicode__(self):
+        return self.name
 
 class NflPlayer(models.Model):
     """Draft-eligible NFL player"""
