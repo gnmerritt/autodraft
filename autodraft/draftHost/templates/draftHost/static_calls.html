@@ -21,10 +21,14 @@
     <td>{teams: [list of teams]}</td>
   </tr>
   <tr>
-    <td>Players on a specific NFL team:<td>/nfl/team/<b>{id}</b>/players/<td>NFL Team object with extra field "players"
+    <td>Players on a specific NFL team:</td>
+    <td><a href="{% url 'draftHost:nfl_team_with_players' 1 %}">{% url 'draftHost:nfl_team_with_players' 1 %}</a></td>
+    <td>NFL Team object with extra field "players"</td>
   </tr>
   <tr>
-    <td>Players on a fantasy team:<td>/team/<b>{id}</b>/players<td>Returns a list of player objects</td>
+    <td>Players on a fantasy team:</td>
+    <td><a href="{% url 'draftHost:fantasy_team_players' 1 %}">{% url 'draftHost:team_id' 1 %}</a></td>
+    <td>Returns a list of player objects</td>
   </tr>
   <tr>
     <td>NFL Conferences:</td>

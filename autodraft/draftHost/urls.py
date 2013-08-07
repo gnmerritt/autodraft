@@ -17,7 +17,7 @@ urlpatterns = patterns('draftHost.views',
     url(r'^team/?$', 'current_team'),
     # NFL Data methods
     url(r'^nfl/teams/?$', views.nfl_teams, name='nfl_teams'),
-    url(r'^nfl/team/(?P<id>\d+)/players/?$', 'nfl_team_with_players'),
+    url(r'^nfl/team/(?P<id>\d+)/players/?$', views.nfl_team_with_players, name='nfl_team_with_players'),
     url(r'^nfl/team/(?P<id>\d+)/?$', 'nfl_team'),
     url(r'^nfl/conferences/?$', views.nfl_conferences, name='nfl_conferences'),
     url(r'^nfl/divisions/?$', views.nfl_divisions, name='nfl_divisions'),
