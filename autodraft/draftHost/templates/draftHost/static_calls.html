@@ -5,7 +5,9 @@
     <th>Returns</th>
   <tr>
   <tr>
-    <td>Player by id:<td>/player/<b>{id}</b><td>returns a player object
+    <td>Player by id:</td>
+    <td><a href="{% url 'draftHost:player' 1 %}">{% url 'draftHost:player' 1 %}</a>
+    <td>returns a player object</td>
   </tr>
   <tr>
     <td>Player search:<td>/search/<b>{query}</b><td>returns a list of matching players. For best results query should be the last name of a player
@@ -14,7 +16,9 @@
     <td>Team by id:<td>/team/<b>{id}</b> or /team/<b>{name}</b><td>returns info about another fantasy team
   </tr>
   <tr>
-    <td>All NFL Teams:<td>/nfl/teams/<td>{teams: [list of teams]}
+    <td>All NFL Teams:</td>
+    <td><a href="{% url 'draftHost:nfl_teams' %}">{% url 'draftHost:nfl_teams' %}</a></td>
+    <td>{teams: [list of teams]}</td>
   </tr>
   <tr>
     <td>Players on a specific NFL team:<td>/nfl/team/<b>{id}</b>/players/<td>NFL Team object with extra field "players"
@@ -23,9 +27,23 @@
     <td>Players on a fantasy team:<td>/team/<b>{id}</b>/players<td>Returns a list of player objects</td>
   </tr>
   <tr>
-    <td>NFL Conferences:<td>/nfl/conferences<td>{divisions: [list of divisions]}
+    <td>NFL Conferences:</td>
+    <td><a href="{% url 'draftHost:nfl_conferences' %}">{% url 'draftHost:nfl_conferences' %}</a></td>
+    <td>{divisions: [list of divisions]}
   </tr>
   <tr>
-    <td>NFL Divisions:<td>/nfl/divisions<td>{conferences: [list of conferences]}
+    <td>NFL Divisions:</td>
+    <td><a href="{% url 'draftHost:nfl_divisions' %}">{% url 'draftHost:nfl_divisions' %}</a></td>
+    <td>{conferences: [list of conferences]}
+  </tr>
+  <tr>
+    <td>Colleges</td>
+    <td><a href="{% url 'draftHost:colleges' %}">{% url 'draftHost:colleges' %}</a></td>
+    <td>{colleges: [list of colleges]}</td>
+  </tr>
+  <tr>
+    <td>Players by College</td>
+    <td><a href="{% url 'draftHost:college_players' 1 %}">{% url 'draftHost:college_players' 1 %}</a></td>
+    <td>{college object with players list}</td>
   </tr>
 </table>
