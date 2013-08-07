@@ -4,7 +4,7 @@ from django.shortcuts import get_object_or_404, render
 import django.http.response
 
 from draftHost import models
-from draftHost.logic import nfl, fantasy, auth, draft, json
+from draftHost.logic import nfl, fantasy, auth, draft, json, college
 from draftHost.logic.auth import AuthContext as AuthContext
 
 def get_context_or_error(request):
@@ -106,6 +106,19 @@ def nfl_positions(request):
     positions_json = [nfl.JsonNflPosition(p).json_dict()
                       for p in positions]
     return json.obj_to_json({'positions':positions_json})
+
+def colleges(request):
+    colleges = models.College.objects.all().exclude(name="Unknown")
+    colleges_json = []
+    for c in colleges:
+        colleges_json.append(college.JsonCollege(c).json_dict())
+    return json.obj_to_json({'colleges':colleges_json})
+
+def college_players(request, id):
+    c = get_object_or_404(models.College, pk=id)
+    college_json = college.JsonCollege(c)
+    college_json.show_players = True
+    return college_json.json_response()
 
 def my_team(request, key):
     team = get_object_or_404(models.FantasyTeam, auth_key=key)

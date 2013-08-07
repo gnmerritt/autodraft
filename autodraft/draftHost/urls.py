@@ -22,6 +22,8 @@ urlpatterns = patterns('draftHost.views',
     url(r'^nfl/conferences/?$', 'nfl_conferences'),
     url(r'^nfl/divisions/?$', 'nfl_divisions'),
     url(r'^nfl/positions/?$', 'nfl_positions'),
+    url(r'^colleges/?$', 'colleges'),
+    url(r'^college/(?P<id>\d+)/players/?$', 'college_players'),
     # HTML views
     url(r'^my_team/(?P<key>[^/]+)/?$', views.my_team, name='my_team'),
     url(r'^register/?$', views.register, name='register'),

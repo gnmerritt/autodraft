@@ -1,12 +1,9 @@
 from json import JsonObject
 from draftHost import models
-import fantasy
+import fantasy, college
+
 
 class JsonNflPosition(JsonObject):
-    pass # No extra fields needed
-
-
-class JsonCollege(JsonObject):
     pass # No extra fields needed
 
 
@@ -29,7 +26,7 @@ class JsonNflPlayer(JsonObject):
         return self.db_object.fantasy_position.position.abbreviation
 
     def get_college(self):
-        return JsonCollege(self.db_object.school).json_dict()
+        return college.JsonCollege(self.db_object.school).json_dict()
 
     def get_fantasy_team(self):
         if not self.draft:
