@@ -11,7 +11,7 @@ class JsonNflPlayer(JsonObject):
     fields = ['first_name', 'last_name']
     functions = ['team', 'college',
                  'nfl_position', 'fantasy_position',
-                 'fantasy_team',]
+                 'fantasy_team', 'draft_year']
 
     show_fantasy_team = False
     draft = None
@@ -40,6 +40,12 @@ class JsonNflPlayer(JsonObject):
         json_team.show_picks = False
         json_team.show_selections = False
         return json_team.json_dict()
+
+    def get_draft_year(self):
+        """Return the draft year only if it's valid"""
+        if self.db_object.draft_year > 1:
+            return self.db_object.draft_year
+        return None
 
 
 class JsonNflTeam(JsonObject):

@@ -56,6 +56,7 @@ class NflPlayer(models.Model):
     """Draft-eligible NFL player"""
     first_name = models.TextField()
     last_name = models.TextField()
+    draft_year = models.PositiveIntegerField(default=1)
     team = models.ForeignKey(NflTeam)
     school = models.ForeignKey(College)
     position = models.ForeignKey(NflPosition)
