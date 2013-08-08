@@ -74,7 +74,7 @@ def fantasy_team_players(request, id):
     return json_team.json_response()
 
 def nfl_teams(request):
-    teams = models.NflTeam.objects.all()
+    teams = models.NflTeam.objects.all().exclude(name="Unknown")
     teams_json = [nfl.JsonNflTeam(t).json_dict() for t in teams]
     return json.obj_to_json({'teams': teams_json})
 
