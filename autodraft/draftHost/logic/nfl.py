@@ -17,7 +17,8 @@ class JsonNflPlayer(JsonObject):
     draft = None
 
     def get_team(self):
-        return JsonNflTeam(self.db_object.team).json_dict()
+        if self.db_object.team.name != "Unknown":
+            return JsonNflTeam(self.db_object.team).json_dict()
 
     def get_nfl_position(self):
         return JsonNflPosition(self.db_object.position).json_dict()
