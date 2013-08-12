@@ -11,7 +11,7 @@ class CollegeImporter(object):
                 parts = line.rstrip().split(',')
                 college, created = models.College.objects.get_or_create(
                     id=parts[0],
-                    name=parts[1],
+                    name=parts[1].replace("'", ''),
                 )
                 if created:
                     print "created College {c}".format(c=college)
