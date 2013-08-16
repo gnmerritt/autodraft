@@ -6,7 +6,7 @@
 
 <p>Welcome! You've successfully registered your team. Bookmark this page, as it is the only record of your authentication key that you will receive.</p>
 
-<p>You must include your authentication key ({{ team.auth_key }}) as a URL param in any draft-dependent requests you make. For example, to query the current state of the draft you would use:
+<p>You must include your authentication key (<b>{{ team.auth_key }}</b>) as a URL param in any draft-dependent requests you make. For example, to query the current state of the draft you would use:
 {% include "draftHost/ex_link.html" with path="draftHost:draft" key=team.auth_key %} or to see info on picks/selections so far you'd hit
 {% include "draftHost/ex_link.html" with path="draftHost:picks" key=team.auth_key %} picks have been assigned and selections have been made. Picks will be assigned once your draft has filled up with registered teams.</p>
 
