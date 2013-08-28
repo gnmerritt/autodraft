@@ -3,7 +3,8 @@ from django.views.generic import TemplateView
 from draftHost import views
 
 urlpatterns = patterns('draftHost.views',
-    url(r'^robots\.txt$', TemplateView.as_view(template_name='robots.html')),
+    url(r'^robots\.txt$',
+        TemplateView.as_view(template_name='robots.html', content_type='text/plain')),
 
     url(r'^draft/?$', views.draft_key, name='draft'),
     url(r'^draft/(?P<id>\d+)/?$', views.draft_id, name='draft_id'),
