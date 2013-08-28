@@ -1,8 +1,10 @@
 from django.conf.urls import patterns, url
-
+from django.views.generic import TemplateView
 from draftHost import views
 
 urlpatterns = patterns('draftHost.views',
+    url(r'^robots\.txt$', TemplateView.as_view(template_name='robots.html')),
+
     url(r'^draft/?$', views.draft_key, name='draft'),
     url(r'^draft/(?P<id>\d+)/?$', views.draft_id, name='draft_id'),
     url(r'^picks/?$', views.picks, name='picks'),
