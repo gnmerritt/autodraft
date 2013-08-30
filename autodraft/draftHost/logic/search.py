@@ -17,10 +17,18 @@ class SearchRunner(object):
         self.query = { 'name':self.name,
                        'position':self.position, }
 
-        players = models.NflPlayer.objects.filter(
-            Q(first_name__contains=self.name) |
-            Q(last_name__contains=self.name)
-            )
+        players = models.NflPlayer.objects.all()
+
+        if self.name:
+            players = players.filter(
+                Q(first_name__contains=self.name) |
+                Q(last_name__contains=self.name)
+                )
+
+        if self.position:
+            players = players.filter(
+                Q(position__abbreviation__contains=self.position)
+                )
 
         self.results = [ JsonNflPlayer(p).json_dict()
                          for p in players ]

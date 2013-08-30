@@ -9,9 +9,13 @@
     <td><a href="{% url 'draftHost:player' 1 %}">{% url 'draftHost:player' 1 %}</a>
     <td>returns a player object</td>
   </tr>
+
   <tr>
-    <td>Player search:<td>/search/<b>{query}</b><td>returns a list of matching players. For best results query should be the last name of a player
+    <td>Player search:</td>
+    <td><a href="{% url 'draftHost:search_name_pos' 'brady' 'qb' %}">{% url 'draftHost:search_name_pos' 'brady' 'qb' %}</a></td>
+    <td>Matches based on player first/last name, and optionally position. Returns matching players</td>
   </tr>
+
   <tr>
     <td>Team by id:<td>/team/<b>{id}</b> or /team/<b>{name}</b><td>returns info about another fantasy team
   </tr>
@@ -28,6 +32,11 @@
   <tr>
     <td>Players on a fantasy team:</td>
     <td><a href="{% url 'draftHost:fantasy_team_players' 1 %}">{% url 'draftHost:team_id' 1 %}</a></td>
+    <td>Returns a list of player objects</td>
+  </tr>
+  <tr>
+    <td>Players by position:</td>
+    <td><a href="{% url 'draftHost:position_players' 'WR' %}">{% url 'draftHost:position_players' 'WR' %}</a></td>
     <td>Returns a list of player objects</td>
   </tr>
   <tr>

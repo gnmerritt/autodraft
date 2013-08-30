@@ -12,7 +12,15 @@ urlpatterns = patterns('draftHost.views',
     url(r'^picks/make/(?P<pick_id>\d+)/player/(?P<player_id>\d+)/?$', 'make_pick'),
     url(r'^player/(?P<uid>\d+)/?$', views.player, name='player'),
     url(r'^player/(?P<uid>\d+)/status/?$', 'player_status'),
-    url(r'^search/(?P<name>.*)/?$', 'search'),
+
+    # Search views
+    url(r'^search/name/(?P<name>\w+)/?$',
+        views.search, name='search'),
+    url(r'^search/name/(?P<name>\w+)/pos/(?P<position>\w{2})?/?$',
+        views.search, name='search_name_pos'),
+    url(r'^nfl/position/(?P<position>\w{2})/?$',
+        views.search, name='position_players'),
+
     url(r'^team/(?P<id>\d+)/?$', views.team_id, name='team_id'),
     url(r'^team/(?P<id>\d+)/players/?$',
         views.fantasy_team_players, name='fantasy_team_players'),
