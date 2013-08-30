@@ -47,7 +47,7 @@ class JsonFantasyDraft(JsonObject):
 
 class JsonFantasyTeam(JsonObject):
     fields = ['name',]
-    functions = ['pick_ids', 'selection_ids', 'draft_id', 'email', 'players']
+    functions = ['picks', 'selection_ids', 'draft_id', 'email', 'players']
     pick_options = { 'show_team': False, }
 
     show_players = False
@@ -63,7 +63,7 @@ class JsonFantasyTeam(JsonObject):
             return EmailMasker(email).masked
         return email
 
-    def get_pick_ids(self):
+    def get_picks(self):
         return self.builder.get_picks(is_team=True,
                                       options=self.pick_options)
 

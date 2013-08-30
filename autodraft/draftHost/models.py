@@ -1,5 +1,5 @@
-from django.db import models
 import datetime
+from django.db import models
 
 
 class NflConference(models.Model):
@@ -119,6 +119,11 @@ class FantasyTeam(models.Model):
     def __unicode__(self):
         return self.name
 
+    def picks(self):
+        return FantasyPick.objects.filter(fantasy_team=self)
+
+    def remove_picks(self):
+        self.picks().delete()
 
 class FantasyPick(models.Model):
     """An upcoming pick"""

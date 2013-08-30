@@ -1,13 +1,14 @@
 from __future__ import division
 import math
 import random
+import datetime
 
 from draftHost import models
-from json import JsonObject
+import json
 import fantasy
 
 
-class PickBuilder(JsonObject):
+class PickBuilder(json.JsonObject):
     """Accumulates a list of picks associated with a draft
     Constructor argument should be a FantasyDraft model object"""
     functions = ['picks', 'selections',]
@@ -17,7 +18,7 @@ class PickBuilder(JsonObject):
     show_id = False
 
     def get_picks(self, is_team=False, options={}):
-        pick_ids = []
+        json_picks = []
         if is_team:
             picks = models.FantasyPick.objects.filter(
                 fantasy_team=self.db_object)
@@ -25,8 +26,10 @@ class PickBuilder(JsonObject):
             picks = models.FantasyPick.objects.filter(
                 fantasy_team__draft=self.db_object)
         for pick in picks:
-            pick_ids.append(pick.id)
-        return pick_ids
+            json = fantasy.JsonFantasyPick(pick)
+            json.show_team = not is_team
+            json_picks.append(json.json_dict())
+        return json_picks
 
     def get_selections(self, is_team=False, options={}):
         selection_ids = []
@@ -54,8 +57,9 @@ class PickAssigner(object):
 
     def build_teams_from_db(self):
         teams = models.FantasyTeam.objects.filter(draft=self.db_draft)
-        random.shuffle(teams)
-        self.teams = teams
+        teams_list = [t for t in teams.iterator()]
+        random.shuffle(teams_list)
+        self.teams = teams_list
 
     def assign_picks(self):
         """Assigns picks and returns a list of the dict objects"""
@@ -69,7 +73,7 @@ class PickAssigner(object):
                 "starts": pick_start,
                 "expires": pick_expires,
                 "pick_number": i,
-                "team": team,
+                "fantasy_team": team,
             }
             picks.append(pick_dict)
 
@@ -79,8 +83,9 @@ class PickAssigner(object):
         """Gets the start/expiration time for a pick"""
         start_time = self.db_draft.draft_start
         time_increment_s = self.db_draft.time_per_pick
-        start = start_time + (time_increment_s * (pick_number - 1))
-        expires = start + time_increment_s
+        increase = (time_increment_s * (pick_number - 1))
+        start = start_time + datetime.timedelta(seconds=increase)
+        expires = start + datetime.timedelta(seconds=time_increment_s)
         return start, expires
 
     def get_team_for_pick(self, pick_number):
@@ -107,3 +112,21 @@ class PickAssigner(object):
                 print "created pick! {p}".format(p=pick)
             else:
                 print "got pick {p}".format(p=pick)
+
+    def remove_picks(self):
+        for t in self.teams:
+            t.remove_picks()
+
+    def pick_status(self):
+        status = 'NONE'
+        has_picks = 0
+        for t in self.teams:
+            if t.picks():
+                has_picks += 1
+
+        if has_picks == 0:
+            return 'NONE'
+        elif has_picks == len(self.teams):
+            return 'ALL'
+        else:
+            return 'SOME'

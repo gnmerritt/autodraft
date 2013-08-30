@@ -121,7 +121,7 @@ class PickAssignerTest(TestCase):
         self.num_teams = 10
         self.mock_draft = MockDbDraft(self.num_teams)
         self.mock_draft.rounds = 3
-        self.mock_draft.draft_start = 0
+        self.mock_draft.draft_start = datetime.datetime.now()
         self.mock_draft.time_per_pick = 120
 
         self.teams = range(1, self.num_teams + 1)
@@ -132,7 +132,7 @@ class PickAssignerTest(TestCase):
 
     def test_team_for_pick(self):
         round_1 = self.teams
-        round_2 = range(self. num_teams, 0, -1)
+        round_2 = range(self.num_teams, 0, -1)
         expected_picks = round_1 + round_2 + round_1
 
         for i, pick in enumerate(self.picks):
@@ -143,8 +143,13 @@ class PickAssignerTest(TestCase):
 
     def test_time_for_pick(self):
         time_pp = self.mock_draft.time_per_pick
-        expected_starts = range(0, time_pp*len(self.picks), time_pp)
-        expected_expires = range(time_pp, time_pp*(len(self.picks) + 1), time_pp)
+        start = self.mock_draft.draft_start
+        num_picks = len(self.picks)
+
+        expected_starts = [ start + datetime.timedelta(seconds=x*time_pp)
+                            for x in range(0,num_picks) ]
+        expected_expires = [ start + datetime.timedelta(seconds=(x + 1)*time_pp)
+                            for x in range(0,num_picks) ]
 
         for i, pick in enumerate(self.picks):
             start, expire = self.assigner.get_times_for_pick(pick)
