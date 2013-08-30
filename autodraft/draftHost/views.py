@@ -5,6 +5,7 @@ import django.http.response
 
 from draftHost import models
 from draftHost.logic import nfl, fantasy, auth, draft, json, college
+from draftHost.logic import search as s
 from draftHost.logic.auth import AuthContext as AuthContext
 
 def get_context_or_error(request):
@@ -47,9 +48,12 @@ def player_status(request, uid):
     json_player.show_fantasy_team = True
     return json_player.json_response()
 
-def search(request, query):
-    ## TODO
-    return HttpResponse("search/{q}".format(q=query))
+def search(request, name, position=None):
+    return s.SearchRunner() \
+      .name(name) \
+      .position(position) \
+      .json_results() \
+      .json_response()
 
 def team_id(request, id):
     team = get_object_or_404(models.FantasyTeam, pk=id)
