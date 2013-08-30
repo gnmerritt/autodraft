@@ -87,7 +87,6 @@ def nfl_team(request, id):
 
 def nfl_team_with_players(request, id, include_players=True):
     team = get_object_or_404(models.NflTeam, pk=id)
-    print "got team {t}".format(t=team)
     json_team = nfl.JsonNflTeam(team)
     if include_players:
         json_team.show_players = True

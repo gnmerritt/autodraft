@@ -35,7 +35,6 @@ class SearchRunner(object):
 
     def json_results(self):
         self.run_search()
-        print JsonSearchResults(self).json_dict()
         return JsonSearchResults(self)
 
 
