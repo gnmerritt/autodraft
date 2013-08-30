@@ -2,6 +2,9 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.shortcuts import get_object_or_404, render
 import django.http.response
+from django.core.exceptions import PermissionDenied
+
+from brake.decorators import ratelimit
 
 from draftHost import models
 from draftHost.logic import nfl, fantasy, auth, draft, json, college
@@ -13,13 +16,14 @@ def get_context_or_error(request):
     context = AuthContext(request)
     if context.is_valid():
         return context
-     ## TODO - this should probably be a different error
-    raise django.http.response.BadHeaderError("invalid auth key")
+    raise django.core.exceptions.PermissionDenied("invalid auth key")
 
+@ratelimit(rate="30/m", block=True)
 def draft_key(request):
     context = get_context_or_error(request)
     return fantasy.JsonFantasyDraft(context.draft).json_response()
 
+@ratelimit(rate="30/m", block=True)
 def draft_id(request, id):
     draft = get_object_or_404(models.FantasyDraft, pk=id)
     return fantasy.JsonFantasyDraft(draft).json_response()
@@ -29,6 +33,7 @@ def picks(request):
     picks = draft.PickBuilder(context.draft)
     return picks.json_response()
 
+@ratelimit(block=True)
 def make_pick(request, pick_id, player_id):
     ## TODO
     context = get_context_or_error(request)
@@ -38,6 +43,8 @@ def make_pick(request, pick_id, player_id):
 def player(request, uid):
     db_player = get_object_or_404(models.NflPlayer, pk=uid)
     json_player = nfl.JsonNflPlayer(db_player)
+    was_limited = getattr(request, 'limited', False)
+    print "limited? {}".format(was_limited)
     return json_player.json_response()
 
 def player_status(request, uid):
@@ -48,6 +55,7 @@ def player_status(request, uid):
     json_player.show_fantasy_team = True
     return json_player.json_response()
 
+@ratelimit(block=True)
 def search(request, name=None, position=None):
     return s.SearchRunner() \
       .name(name) \
@@ -85,6 +93,7 @@ def nfl_teams(request):
 def nfl_team(request, id):
     return nfl_team_with_players(request, id, include_players=False)
 
+@ratelimit(block=True)
 def nfl_team_with_players(request, id, include_players=True):
     team = get_object_or_404(models.NflTeam, pk=id)
     json_team = nfl.JsonNflTeam(team)
@@ -117,6 +126,7 @@ def colleges(request):
         colleges_json.append(college.JsonCollege(c).json_dict())
     return json.obj_to_json({'colleges':colleges_json})
 
+@ratelimit(block=True)
 def college_players(request, id):
     c = get_object_or_404(models.College, pk=id)
     college_json = college.JsonCollege(c)
