@@ -161,12 +161,12 @@ class PickValidator(object):
             self.status = self.statuses['inactive']
             return
 
-        if self.player_taken(player):
-            self.status = self.statuses['taken']
-            return
-
         if self.pick_used():
             self.status = self.statuses['pick_used']
+            return
+
+        if self.player_taken(player):
+            self.status = self.statuses['taken']
             return
 
         data = { 'draft_pick': self.pick,
@@ -176,11 +176,11 @@ class PickValidator(object):
         self.success = True
 
     def pick_used(self):
-        selection = models.FantasySelection.objects.get(
+        selections = models.FantasySelection.objects.filter(
             draft_pick=self.pick
         )
-        if selection:
-            self.selection = selection
+        if selections:
+            self.selection = selections[0]
             return True
 
     def player_taken(self, player):
