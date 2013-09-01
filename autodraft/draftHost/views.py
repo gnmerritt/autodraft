@@ -33,18 +33,17 @@ def picks(request):
     picks = draft.PickBuilder(context.draft)
     return picks.json_response()
 
-@ratelimit(block=True)
+@ratelimit(rate="10/m", block=True)
 def make_pick(request, pick_id, player_id):
-    ## TODO
     context = get_context_or_error(request)
-    return HttpResponse("picks/make/{p}/player/{who}/"
-                        .format(p=pick_id, who=player_id))
+    player = get_object_or_404(models.NflPlayer, pk=player_id)
+    validator = draft.PickValidator(context)
+    validator.draft_player(player)
+    return validator.get_response()
 
 def player(request, uid):
     db_player = get_object_or_404(models.NflPlayer, pk=uid)
     json_player = nfl.JsonNflPlayer(db_player)
-    was_limited = getattr(request, 'limited', False)
-    print "limited? {}".format(was_limited)
     return json_player.json_response()
 
 def player_status(request, uid):

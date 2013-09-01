@@ -122,7 +122,6 @@ class JsonFantasyPick(JsonObject):
 
 class JsonFantasySelection(JsonObject):
     functions = ['team', 'draft_pick', 'player', 'when',]
-
     show_team = False
 
     def get_team(self):

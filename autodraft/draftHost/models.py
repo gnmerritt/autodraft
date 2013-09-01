@@ -1,6 +1,5 @@
-import datetime
 from django.db import models
-
+from django.utils import timezone
 
 class NflConference(models.Model):
     name = models.TextField()
@@ -125,6 +124,7 @@ class FantasyTeam(models.Model):
     def remove_picks(self):
         self.picks().delete()
 
+
 class FantasyPick(models.Model):
     """An upcoming pick"""
     fantasy_team = models.ForeignKey(FantasyTeam)
@@ -135,9 +135,14 @@ class FantasyPick(models.Model):
     class Meta:
         ordering = ('pick_number',)
 
+    def active(self, time):
+        """Returns whether the time is between start & expire"""
+        return self.starts <= time and \
+          self.expires >= time
+
 
 class FantasySelection(models.Model):
     """A pick that's been made"""
-    when = models.DateTimeField(default=datetime.datetime.now())
+    when = models.DateTimeField(default=timezone.now())
     draft_pick = models.ForeignKey(FantasyPick)
     player = models.ForeignKey(NflPlayer)

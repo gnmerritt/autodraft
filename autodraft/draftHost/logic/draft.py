@@ -3,6 +3,8 @@ import math
 import random
 import datetime
 
+from django.utils import timezone
+
 from draftHost import models
 import json
 import fantasy
@@ -130,3 +132,73 @@ class PickAssigner(object):
             return 'ALL'
         else:
             return 'SOME'
+
+
+class PickValidator(object):
+    statuses = {
+        'taken': [410, "That player has already been picked"],
+        'pick_used': [409, "A player has already been selected with this pick"],
+        'inactive': [409, "No picks active right now"],
+        'success': [200, "Player drafted successfully!"],
+    }
+
+    """For a given team & draft, draft a player if available"""
+    def __init__(self, auth_context):
+        self.context = auth_context
+        self.selection = None
+        self.pick = None
+
+        now  = timezone.now()
+        picks = models.FantasyPick.objects.filter(
+            fantasy_team=self.context.team,
+            starts__lte=now, expires__gte=now
+        )
+        if picks:
+            self.pick = picks[0]
+
+    def draft_player(self, player):
+        if not self.pick:
+            self.status = self.statuses['inactive']
+            return
+
+        if self.player_taken(player):
+            self.status = self.statuses['taken']
+            return
+
+        if self.pick_used():
+            self.status = self.statuses['pick_used']
+            return
+
+        data = { 'draft_pick': self.pick,
+                 'player': player, }
+        self.selection = models.FantasySelection.objects.create(**data)
+        self.status = self.statuses['success']
+
+    def pick_used(self):
+        selections = models.FantasySelection.objects.filter(
+            draft_pick=self.pick
+        )
+        return selections
+
+    def player_taken(self, player):
+        selections = models.FantasySelection.objects.filter(
+            player=player,
+            draft_pick__fantasy_team__draft=self.context.draft,
+        )
+        return selections
+
+    def get_response(self):
+        self.code = self.status[0]
+        self.message = self.status[1]
+        if self.selection:
+            self.success = True
+        return JsonPickResponse(self).json_response()
+
+
+class JsonPickResponse(json.JsonObject):
+    fields = [ 'success', 'message', 'code', ]
+    functions = [ 'selection', ]
+
+    def get_selection(self):
+        selection = fantasy.JsonFantasySelection(selection)
+        return selection.json_dict()
