@@ -34,7 +34,7 @@ def picks(request):
     return picks.json_response()
 
 @ratelimit(rate="10/m", block=True)
-def make_pick(request, pick_id, player_id):
+def make_pick(request, player_id):
     context = get_context_or_error(request)
     player = get_object_or_404(models.NflPlayer, pk=player_id)
     validator = draft.PickValidator(context)

@@ -125,10 +125,12 @@ class JsonFantasySelection(JsonObject):
     show_team = False
 
     def get_team(self):
-        return JsonFantasyTeam(self.db_object.draft_pick.fantasy_team).json_dict()
+        team = JsonFantasyTeam(self.db_object.draft_pick.fantasy_team)
+        return team.json_dict()
 
     def get_draft_pick(self):
         pick = JsonFantasyPick(self.db_object.draft_pick)
+        pick.show_team = False
         return pick.json_dict()
 
     def get_player(self):

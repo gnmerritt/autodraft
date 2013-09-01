@@ -173,12 +173,15 @@ class PickValidator(object):
                  'player': player, }
         self.selection = models.FantasySelection.objects.create(**data)
         self.status = self.statuses['success']
+        self.success = True
 
     def pick_used(self):
-        selections = models.FantasySelection.objects.filter(
+        selection = models.FantasySelection.objects.get(
             draft_pick=self.pick
         )
-        return selections
+        if selection:
+            self.selection = selection
+            return True
 
     def player_taken(self, player):
         selections = models.FantasySelection.objects.filter(
@@ -190,8 +193,6 @@ class PickValidator(object):
     def get_response(self):
         self.code = self.status[0]
         self.message = self.status[1]
-        if self.selection:
-            self.success = True
         return JsonPickResponse(self).json_response()
 
 
@@ -200,5 +201,5 @@ class JsonPickResponse(json.JsonObject):
     functions = [ 'selection', ]
 
     def get_selection(self):
-        selection = fantasy.JsonFantasySelection(selection)
+        selection = fantasy.JsonFantasySelection(self.db_object.selection)
         return selection.json_dict()

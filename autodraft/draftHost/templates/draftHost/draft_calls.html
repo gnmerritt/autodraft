@@ -7,16 +7,24 @@
     <th>Returns</th>
   <tr>
   <tr>
-    <td>Draft info:</td><td>/draft/</td><td>Draft information, teams, picks</td>
+    <td>Draft info:</td>
+    <td><a href="{% url 'draftHost:draft' %}">{% url 'draftHost:draft' %}</a></td>
+    <td>Draft information, teams, picks</td>
   </tr>
   <tr>
-    <td>Draft picks & selections:<td>/picks/<td>picks & selections</td>
+    <td>Draft picks & selections:</td>
+    <td><a href="{% url 'draftHost:picks' %}">{% url 'draftHost:picks' %}</a></td>
+    <td>picks & selections</td>
   </tr>
   <tr>
-    <td>Make a pick:<td>/picks/make/<b>{pick id}</b>/player/<b>{player id}</b><td>TODO</td>
+    <td>Make a pick:</td>
+    <td><a href="{% url 'draftHost:make_pick' 4 %}">{% url 'draftHost:make_pick' 4 %}</a></td>
+    <td>{code -> http status code, success -> True or missing, message -> human readable state, selection -> fantasy selection object }</td>
   </tr>
   <tr>
-    <td>Player status in your draft:<td>/player/<b>{id}</b>/status/<td>Returns the player object, including fantasy team if he's been picked</td>
+    <td>Player status in your draft:</td>
+    <td><a href="{% url 'draftHost:player_status' 5 %}">{% url 'draftHost:player_status' 5 %}</a></td>
+    <td>Returns the player object, including fantasy team if he's been picked</td>
   </tr>
 
 </table>

@@ -9,10 +9,12 @@ urlpatterns = patterns('draftHost.views',
     url(r'^draft/?$', views.draft_key, name='draft'),
     url(r'^draft/(?P<id>\d+)/?$', views.draft_id, name='draft_id'),
     url(r'^picks/?$', views.picks, name='picks'),
-    url(r'^picks/make/(?P<pick_id>\d+)/player/(?P<player_id>\d+)/?$',
+    url(r'^pick_player/(?P<player_id>\d+)/?$',
         views.make_pick, name="make_pick"),
+
     url(r'^player/(?P<uid>\d+)/?$', views.player, name='player'),
-    url(r'^player/(?P<uid>\d+)/status/?$', 'player_status'),
+    url(r'^player/(?P<uid>\d+)/status/?$',
+        views.player_status, name='player_status'),
 
     # Search views
     url(r'^search/name/(?P<name>\w+)/?$',
