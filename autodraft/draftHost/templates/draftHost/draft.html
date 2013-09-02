@@ -1,0 +1,13 @@
+{% extends "draftHost/base.html" %}
+
+{% block content %}
+
+<ul class="draftList">
+  <li>{% include 'draftHost/draft_info.html' %}</li>
+</ul>
+
+{% if is_active %}
+DRAFT IS ACTIVE - TODO picks AJAX
+{% endif %}
+
+{% endblock %}

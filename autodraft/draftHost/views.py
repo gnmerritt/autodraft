@@ -1,6 +1,7 @@
 from django.http import HttpResponse, HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.shortcuts import get_object_or_404, render
+from django.utils import timezone
 import django.http.response
 from django.core.exceptions import PermissionDenied
 
@@ -141,7 +142,7 @@ def my_team(request, key):
     }
     return render(request, 'draftHost/team_page.html', context)
 
-def draft_page(request):
+def index(request):
     drafts = [fantasy.JsonFantasyDraft(k).json_dict()
               for k in models.FantasyDraft.objects.all()]
     for draft in [d for d in drafts
@@ -152,7 +153,7 @@ def draft_page(request):
     context = {
         'drafts': drafts,
     }
-    return render(request, 'draftHost/draft_page.html', context)
+    return render(request, 'draftHost/index.html', context)
 
 def register(request):
     if request.method == 'POST':
@@ -167,11 +168,29 @@ def register(request):
                 private_team_page = reverse('draftHost:my_team', kwargs=args)
                 return HttpResponseRedirect(private_team_page)
             else:
-                return HttpResponseRedirect(reverse('draftHost:draft_page'))
+                return HttpResponseRedirect(reverse('draftHost:index'))
 
-        return draft_page(request)
+        return index(request)
     else:
         raise django.http.response.BadHeaderError("only POST allowed")
+
+@ratelimit(block=True)
+def draft(request, id):
+    draft = get_object_or_404(models.FantasyDraft, pk=id)
+    selections = models.FantasySelection.objects.filter(
+        draft_pick__fantasy_team__draft=draft
+    )
+    now = timezone.now()
+    context = {
+        'draft': fantasy.JsonFantasyDraft(draft).json_dict(),
+        'selections': selections,
+        'is_active': draft.is_active(now),
+    }
+    return render(request, 'draftHost/draft.html', context)
+
+@ratelimit(rate="15/m", block=True)
+def draft_pick_ajax(request, id):
+    return render(request, 'draftHost/pick_ajax.html', {})
 
 def documentation(request):
     return render(request, 'draftHost/documentation.html', {})

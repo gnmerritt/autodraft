@@ -108,6 +108,15 @@ class FantasyDraft(models.Model):
     def __unicode__(self):
         return self.name
 
+    def picks(self):
+        return FantasyPick.objects.filter(fantasy_team__draft=self)
+
+    def is_active(self, time):
+        """A draft is active if any picks are active"""
+        for p in self.picks():
+            if p.is_active(time):
+                return True
+        return False
 
 class FantasyTeam(models.Model):
     draft = models.ForeignKey(FantasyDraft)
@@ -135,7 +144,7 @@ class FantasyPick(models.Model):
     class Meta:
         ordering = ('pick_number',)
 
-    def active(self, time):
+    def is_active(self, time):
         """Returns whether the time is between start & expire"""
         return self.starts <= time and \
           self.expires >= time
