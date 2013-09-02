@@ -6,13 +6,13 @@
   <tr>
   <tr>
     <td>Player by id:</td>
-    <td><a href="{% url 'draftHost:player' 1 %}">{% url 'draftHost:player' 1 %}</a>
+    <td><a href="{% url 'draftHost:api:player' 1 %}">{% url 'draftHost:api:player' 1 %}</a>
     <td>returns a player object</td>
   </tr>
 
   <tr>
     <td>Player search:</td>
-    <td><a href="{% url 'draftHost:search_name_pos' 'brady' 'qb' %}">{% url 'draftHost:search_name_pos' 'brady' 'qb' %}</a></td>
+    <td><a href="{% url 'draftHost:api:search_name_pos' 'brady' 'qb' %}">{% url 'draftHost:api:search_name_pos' 'brady' 'qb' %}</a></td>
     <td>Matches based on player first/last name, and optionally position. Returns matching players</td>
   </tr>
 
@@ -21,42 +21,42 @@
   </tr>
   <tr>
     <td>All NFL Teams:</td>
-    <td><a href="{% url 'draftHost:nfl_teams' %}">{% url 'draftHost:nfl_teams' %}</a></td>
+    <td><a href="{% url 'draftHost:api:nfl_teams' %}">{% url 'draftHost:api:nfl_teams' %}</a></td>
     <td>{teams: [list of teams]}</td>
   </tr>
   <tr>
     <td>Players on a specific NFL team:</td>
-    <td><a href="{% url 'draftHost:nfl_team_with_players' 1 %}">{% url 'draftHost:nfl_team_with_players' 1 %}</a></td>
+    <td><a href="{% url 'draftHost:api:nfl_team_with_players' 1 %}">{% url 'draftHost:api:nfl_team_with_players' 1 %}</a></td>
     <td>NFL Team object with extra field "players"</td>
   </tr>
   <tr>
     <td>Players on a fantasy team:</td>
-    <td><a href="{% url 'draftHost:fantasy_team_players' 1 %}">{% url 'draftHost:team_id' 1 %}</a></td>
+    <td><a href="{% url 'draftHost:api:fantasy_team_players' 1 %}">{% url 'draftHost:api:team_id' 1 %}</a></td>
     <td>Returns a list of player objects</td>
   </tr>
   <tr>
     <td>Players by position:</td>
-    <td><a href="{% url 'draftHost:position_players' 'WR' %}">{% url 'draftHost:position_players' 'WR' %}</a></td>
+    <td><a href="{% url 'draftHost:api:position_players' 'WR' %}">{% url 'draftHost:api:position_players' 'WR' %}</a></td>
     <td>Returns a list of player objects</td>
   </tr>
   <tr>
     <td>NFL Conferences:</td>
-    <td><a href="{% url 'draftHost:nfl_conferences' %}">{% url 'draftHost:nfl_conferences' %}</a></td>
+    <td><a href="{% url 'draftHost:api:nfl_conferences' %}">{% url 'draftHost:api:nfl_conferences' %}</a></td>
     <td>{divisions: [list of divisions]}
   </tr>
   <tr>
     <td>NFL Divisions:</td>
-    <td><a href="{% url 'draftHost:nfl_divisions' %}">{% url 'draftHost:nfl_divisions' %}</a></td>
+    <td><a href="{% url 'draftHost:api:nfl_divisions' %}">{% url 'draftHost:api:nfl_divisions' %}</a></td>
     <td>{conferences: [list of conferences]}
   </tr>
   <tr>
     <td>Colleges</td>
-    <td><a href="{% url 'draftHost:colleges' %}">{% url 'draftHost:colleges' %}</a></td>
+    <td><a href="{% url 'draftHost:api:colleges' %}">{% url 'draftHost:api:colleges' %}</a></td>
     <td>{colleges: [list of colleges]}</td>
   </tr>
   <tr>
     <td>Players by College</td>
-    <td><a href="{% url 'draftHost:college_players' 1 %}">{% url 'draftHost:college_players' 1 %}</a></td>
+    <td><a href="{% url 'draftHost:api:college_players' 1 %}">{% url 'draftHost:api:college_players' 1 %}</a></td>
     <td>{college object with players list}</td>
   </tr>
 </table>

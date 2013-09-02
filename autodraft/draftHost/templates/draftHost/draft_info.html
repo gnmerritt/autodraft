@@ -2,7 +2,7 @@
   <div>
     <span class="name">{{ draft.name }}</span>
     <span class="admin"> - run by {{ draft.admin }}</span>
-    <a href="{% url 'draftHost:draft_id' draft.id %}">JSON Link</a>
+    <a href="{% url 'draftHost:api:draft_id' draft.id %}">JSON Link</a>
   </div>
   <div class="details">
     <div>Roster: {{ draft.roster.description }} ({{ draft.roster.slots }} slots)</div>

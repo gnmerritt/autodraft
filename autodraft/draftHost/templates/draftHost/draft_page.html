@@ -21,7 +21,7 @@
     <tr>
       <td>{{ team.name }}</td>
       <td>{{ team.email }}</td>
-      <td><a href="{% url 'draftHost:team_id' team.id %}">JSON Link</a></td>
+      <td><a href="{% url 'draftHost:api:team_id' team.id %}">JSON Link</a></td>
     </tr>
     {% endfor %}
 
