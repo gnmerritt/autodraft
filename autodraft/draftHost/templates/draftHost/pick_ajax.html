@@ -1,5 +1,28 @@
-{% extends "draftHost/base.html" %}
+{% for p in picks %}
+{% if forloop.first %}
+<table class="picks">
+  <tr>
+    <th>Pick</th>
+    <th>Owner</th>
+    <th>Starts in</th>
+    <th>Expires</th>
+  </tr>
+{% endif %}
 
-{% block content %}
+  <tr class="row {% cycle 'white' 'grey' %}{% if p.active %} active{% endif %}">
+    <td>{{ p.pick_number }}</td>
+    <td>{{ p.team.name }}</td>
 
-{% endblock %}
+    {% if p.active %}
+      <td>Active now!</td>
+      <td>{{ p.expires.relative }}</td>
+    {% else %}
+      <td>{{ p.starts.relative }}</td>
+      <td>{{ p.expires.str }}</td>
+    {% endif %}
+  </tr>
+
+{% if forloop.last %}
+  </table>
+{% endif %}
+{% endfor %}

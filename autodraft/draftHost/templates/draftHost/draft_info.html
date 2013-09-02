@@ -5,6 +5,7 @@
     <a href="{% url 'draftHost:api:draft_id' draft.id %}">JSON Link</a>
   </div>
   <div class="details">
+    <div><a href="{% url 'draftHost:draft' draft.id %}">Detail page</a></div>
     <div>Roster: {{ draft.roster.description }} ({{ draft.roster.slots }} slots)</div>
     <div>
       <span>Draft starts at {{ draft.draft_start.str }},</span>

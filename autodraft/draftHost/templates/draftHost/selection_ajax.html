@@ -1,0 +1,25 @@
+{% for s in selections %}
+{% if forloop.first %}
+<table class="selections">
+  <tr>
+    <th>Pick</th>
+    <th>Player</th>
+    <th>Picked by</th>
+    <th>At</th>
+  </tr>
+{% endif %}
+
+  <tr class="{% cycle 'white' 'grey' %}">
+    <td>{{ s.draft_pick.pick_number }}</td>
+    <td>{{ s.player.first_name }} {{ s.player.last_name }}</td>
+    <td>{{ s.team.name }}</td>
+    <td>{{ s.when.str }}</td>
+  </tr>
+
+{% if forloop.last %}
+  </table>
+{% endif %}
+
+{% empty %}
+  <div>None yet!</div>
+{% endfor %}

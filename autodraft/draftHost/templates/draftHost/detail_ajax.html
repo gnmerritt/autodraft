@@ -1,0 +1,11 @@
+<h3>Upcoming picks:</h3>
+
+{% include 'draftHost/pick_ajax.html' %}
+
+<h3>Selections:</h3>
+
+{% include 'draftHost/selection_ajax.html' %}
+
+{% if is_active %}
+ got an active draft!
+{% endif %}

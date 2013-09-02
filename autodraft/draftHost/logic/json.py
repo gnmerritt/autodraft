@@ -1,7 +1,7 @@
 import time, re
 import simplejson as json
 from django.http import HttpResponse
-
+from dateutil.relativedelta import relativedelta
 
 def obj_to_json(object):
     return HttpResponse(json.dumps(object), mimetype="application/json")
@@ -113,17 +113,29 @@ def datetime_to_timestamp(dt):
     """Converts a datetime object to UTC timestamp"""
     return int(utc_mktime(dt.timetuple()))
 
+def human_readable(delta):
+    """Converts a relativedelta list to a human readable string"""
+    attrs = ['years', 'months', 'days', 'hours', 'minutes', 'seconds']
+    return ['%d %s' % (getattr(delta, attr), getattr(delta, attr) > 1 and attr or attr[:-1])
+            for attr in attrs if getattr(delta, attr)]
 
 class JsonTime(JsonObject):
     """Standard time representation, input object should be a
     datetime.datetime"""
-    functions = ['utc', 'str']
+    functions = ['utc', 'str', 'relative']
+    now = None
 
     def get_utc(self):
         return datetime_to_timestamp(self.db_object)
 
     def get_str(self):
         return unicode(self.db_object)
+
+    def get_relative(self):
+        if self.now is not None:
+            human_list = human_readable(relativedelta(self.db_object, self.now))
+            return ', '.join(human_list)
+
 
 class EmailMasker(object):
     ADDRESS = r'.*@(.*)\.\w+'

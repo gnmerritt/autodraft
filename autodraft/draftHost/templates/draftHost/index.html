@@ -18,7 +18,7 @@
       <th>API Link</th>
     </tr>
     {% for team in draft.teams %}
-    <tr>
+    <tr class="{% cycle 'white' 'grey' %}">
       <td>{{ team.name }}</td>
       <td>{{ team.email }}</td>
       <td><a href="{% url 'draftHost:api:team_id' team.id %}">JSON Link</a></td>

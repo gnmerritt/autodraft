@@ -108,16 +108,29 @@ class FantasyTeamCreator(object):
 
 class JsonFantasyPick(JsonObject):
     fields = ['pick_number',]
-    functions = ['team', 'expires', 'starts',]
+    functions = ['team', 'expires', 'starts', 'active']
+    now = None
 
     def get_starts(self):
-        return JsonTime(self.db_object.starts).json_dict()
+        return self.__time(self.db_object.starts)
 
     def get_expires(self):
-        return JsonTime(self.db_object.expires).json_dict()
+        return self.__time(self.db_object.expires)
+
+    def __time(self, when):
+        time = JsonTime(when)
+        if self.now is not None:
+            time.now = self.now
+        return time.json_dict()
 
     def get_team(self):
-        return JsonFantasyTeam(self.db_object.fantasy_team).json_dict()
+        team = JsonFantasyTeam(self.db_object.fantasy_team)
+        team.show_picks = False
+        return team.json_dict()
+
+    def get_active(self):
+        if self.now is not None:
+            return self.db_object.is_active(self.now)
 
 
 class JsonFantasySelection(JsonObject):
@@ -126,11 +139,14 @@ class JsonFantasySelection(JsonObject):
 
     def get_team(self):
         team = JsonFantasyTeam(self.db_object.draft_pick.fantasy_team)
+        team.show_picks = False
         return team.json_dict()
 
     def get_draft_pick(self):
         pick = JsonFantasyPick(self.db_object.draft_pick)
-        pick.show_team = False
+        pick.show_selection_ids = False
+        if self.show_team:
+            pick.show_team = False
         return pick.json_dict()
 
     def get_player(self):

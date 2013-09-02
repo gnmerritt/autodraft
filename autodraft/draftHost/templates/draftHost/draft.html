@@ -6,8 +6,8 @@
   <li>{% include 'draftHost/draft_info.html' %}</li>
 </ul>
 
-{% if is_active %}
-DRAFT IS ACTIVE - TODO picks AJAX
-{% endif %}
+<div class="pick_ajax">
+  {% include 'draftHost/detail_ajax.html' %}
+</div>
 
 {% endblock %}

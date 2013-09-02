@@ -8,7 +8,7 @@ urlpatterns = patterns('draftHost.views',
     url(r'^my_team/(?P<key>[^/]+)/?$', views.my_team, name='my_team'),
     url(r'^register/?$', views.register, name='register'),
     url(r'^doc/$', views.documentation, name='documentation'),
-    url(r'^draft/(?P<id>\d+)/?$', views.draft, name='draft'),
+    url(r'^draft/(?P<id>\d+)/?$', views.draft_detail, name='draft'),
     url(r'^draft/(?P<id>\d+)/picks/?$', views.draft_pick_ajax, name='pick_ajax'),
     url(r'^/?$', views.index, name='index'),
 

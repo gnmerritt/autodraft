@@ -174,23 +174,45 @@ def register(request):
     else:
         raise django.http.response.BadHeaderError("only POST allowed")
 
-@ratelimit(block=True)
-def draft(request, id):
+def draft_detail(request, id, ajax_only=False):
     draft = get_object_or_404(models.FantasyDraft, pk=id)
-    selections = models.FantasySelection.objects.filter(
+    json_draft = fantasy.JsonFantasyDraft(draft).json_dict()
+    now = timezone.now()
+    is_active = draft.is_active(now)
+
+    selections_queryset = models.FantasySelection.objects.filter(
         draft_pick__fantasy_team__draft=draft
     )
-    now = timezone.now()
-    context = {
-        'draft': fantasy.JsonFantasyDraft(draft).json_dict(),
-        'selections': selections,
-        'is_active': draft.is_active(now),
-    }
-    return render(request, 'draftHost/draft.html', context)
+    selections = []
+    for s in selections_queryset:
+        selection_json = fantasy.JsonFantasySelection(s)
+        selection_json.show_team = True
+        selections.append(selection_json.json_dict())
 
-@ratelimit(rate="15/m", block=True)
+    picks_queryset = models.FantasyPick.objects.filter(
+        fantasy_team__draft=draft
+    )
+    picks = []
+    for p in picks_queryset:
+        json = fantasy.JsonFantasyPick(p)
+        json.now = now
+        picks.append(json.json_dict())
+    picks.sort(key=lambda p: p['pick_number'])
+    shown_picks = len(json_draft['teams']) + 1
+
+    context = {
+        'draft': json_draft,
+        'picks': picks[:shown_picks],
+        'selections': selections,
+        'is_active': is_active,
+    }
+    if ajax_only:
+        return render(request, 'draftHost/detail_ajax.html', context)
+    else:
+        return render(request, 'draftHost/draft.html', context)
+
 def draft_pick_ajax(request, id):
-    return render(request, 'draftHost/pick_ajax.html', {})
+    return draft_detail(request, id, ajax_only=True)
 
 def documentation(request):
     return render(request, 'draftHost/documentation.html', {})
