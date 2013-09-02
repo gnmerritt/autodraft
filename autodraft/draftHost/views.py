@@ -205,6 +205,7 @@ def draft_detail(request, id, ajax_only=False):
         'picks': picks[:shown_picks],
         'selections': selections,
         'is_active': is_active,
+        'poll_time': 10000, # 10 seconds
     }
     if ajax_only:
         return render(request, 'draftHost/detail_ajax.html', context)

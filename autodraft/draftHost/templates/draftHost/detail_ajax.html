@@ -1,3 +1,4 @@
+<div class="pick_ajax">
 <h3>Upcoming picks:</h3>
 
 {% include 'draftHost/pick_ajax.html' %}
@@ -7,5 +8,12 @@
 {% include 'draftHost/selection_ajax.html' %}
 
 {% if is_active %}
- got an active draft!
+<script type="text/javascript">
+  setTimeout(function() {
+    $('.pick_ajax').load("{% url 'draftHost:pick_ajax' draft.id %}", function() {
+       eval($('.pick_ajax script').html());
+    });
+  }, {{ poll_time }});
+</script>
 {% endif %}
+</div>
