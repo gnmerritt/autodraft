@@ -7,8 +7,8 @@
 <p>Welcome! You've successfully registered your team. Bookmark this page, as it is the only record of your authentication key that you will receive.</p>
 
 <p>You must include your authentication key (<b>{{ team.auth_key }}</b>) as a URL param in any draft-dependent requests you make. For example, to query the current state of the draft you would use:
-{% include "draftHost/ex_link.html" with path="draftHost:draft" key=team.auth_key %} or to see info on picks/selections so far you'd hit
-{% include "draftHost/ex_link.html" with path="draftHost:picks" key=team.auth_key %} picks have been assigned and selections have been made. Picks will be assigned once your draft has filled up with registered teams.</p>
+{% include "draftHost/ex_link.html" with path="draftHost:api:draft" key=team.auth_key %} or to see info on picks/selections so far you'd hit
+{% include "draftHost/ex_link.html" with path="draftHost:api:picks" key=team.auth_key %} picks have been assigned and selections have been made. Picks will be assigned once your draft has filled up with registered teams.</p>
 
 <p>Once picks have been assigned, each pick will include a start and expires UTC timestamp. It's your responsibility to make your pick in the correct time window. You can make a pick by POSTing to a URL of the format: <i>/picks/make/<b>{pick id from the object}</b>/player/<b>{player id}</b>?key={your key}</i>. </p>
 
@@ -25,7 +25,7 @@
     <li>Name: {{ team.name }}</li>
     <li>Email: {{ team.email }}</li>
     <li>Auth Key: {{ team.auth_key }}</li>
-    <li><a href="{% url 'draftHost:team_id' team.id %}">JSON Link</a></li>
+    <li><a href="{% url 'draftHost:api:team_id' team.id %}">JSON Link</a></li>
   </ul>
 </div>
 
