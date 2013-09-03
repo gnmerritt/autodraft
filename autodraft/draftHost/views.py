@@ -188,12 +188,16 @@ def draft_detail(request, id, ajax_only=False):
         selection_json = fantasy.JsonFantasySelection(s)
         selection_json.show_team = True
         selections.append(selection_json.json_dict())
+    selections.sort(key=lambda s: s['draft_pick']['pick_number'],
+                    reverse=is_active)
 
     picks_queryset = models.FantasyPick.objects.filter(
         fantasy_team__draft=draft
     )
     picks = []
     for p in picks_queryset:
+        if now > p.expires:
+            continue
         json = fantasy.JsonFantasyPick(p)
         json.now = now
         picks.append(json.json_dict())
