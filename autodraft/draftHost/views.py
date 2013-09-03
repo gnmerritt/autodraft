@@ -36,6 +36,8 @@ def picks(request):
 
 @ratelimit(rate="10/m", block=True)
 def make_pick(request, player_id):
+    if request.method != 'POST':
+        raise django.http.response.BadHeaderError("only POST allowed")
     context = get_context_or_error(request)
     player = get_object_or_404(models.NflPlayer, pk=player_id)
     validator = draft.PickValidator(context)
