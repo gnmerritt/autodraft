@@ -35,7 +35,7 @@ def picks(request):
     picks.now = timezone.now()
     return picks.json_response(request)
 
-@ratelimit(rate="10/m")
+@ratelimit(rate="10/m", block=True)
 def make_pick(request, player_id):
     if request.method == "POST" or request.method == "GET":
         context = get_context_or_error(request)
