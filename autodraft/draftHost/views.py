@@ -37,13 +37,20 @@ def picks(request):
 
 @ratelimit(rate="10/m", block=True)
 def make_pick(request, player_id):
-    if request.method != 'POST':
-        raise django.http.response.BadHeaderError("only POST allowed")
-    context = get_context_or_error(request)
-    player = get_object_or_404(models.NflPlayer, pk=player_id)
-    validator = draft.PickValidator(context)
-    validator.draft_player(player)
-    return validator.get_response(request)
+    if request.method == "POST" or request.method == "GET":
+        context = get_context_or_error(request)
+        player = get_object_or_404(models.NflPlayer, pk=player_id)
+        validator = draft.PickValidator(context)
+        validator.draft_player(player)
+        return validator.get_response(request)
+    elif request.method == "OPTIONS":
+        response = HttpResponse("")
+        response['Access-Control-Allow-Origin'] = "*"
+        response['Access-Control-Allow-Methods'] = "POST, OPTIONS"
+        response['Access-Control-Allow-Headers'] = "X-Requested-With"
+        response['Access-Control-Max-Age'] = "1800"
+    else:
+        raise django.http.response.BadHeaderError("only POST/OPTIONS allowed")
 
 def player(request, uid):
     db_player = get_object_or_404(models.NflPlayer, pk=uid)

@@ -9,7 +9,10 @@ def obj_to_json(object, request):
     if 'callback' in request.REQUEST:
         # a jsonp response!
         data = '%s(%s);' % (request.REQUEST['callback'], data)
-    return HttpResponse(data, mimetype="application/json")
+    response = HttpResponse(data, mimetype="application/json")
+    if request.method == "POST":
+        response['Access-Control-Allow-Origin'] = "*"
+    return response
 
 
 class JsonObject(object):
