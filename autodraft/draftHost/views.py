@@ -19,12 +19,12 @@ def get_context_or_error(request):
         return context
     raise django.core.exceptions.PermissionDenied("invalid auth key")
 
-@ratelimit(rate="30/m", block=True)
+@ratelimit(rate="30/m")
 def draft_key(request):
     context = get_context_or_error(request)
     return fantasy.JsonFantasyDraft(context.draft).json_response(request)
 
-@ratelimit(rate="30/m", block=True)
+@ratelimit(rate="30/m")
 def draft_id(request, id):
     draft = get_object_or_404(models.FantasyDraft, pk=id)
     return fantasy.JsonFantasyDraft(draft).json_response(request)
@@ -35,7 +35,7 @@ def picks(request):
     picks.now = timezone.now()
     return picks.json_response(request)
 
-@ratelimit(rate="10/m", block=True)
+@ratelimit(rate="10/m")
 def make_pick(request, player_id):
     if request.method == "POST" or request.method == "GET":
         context = get_context_or_error(request)
