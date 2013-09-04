@@ -42,7 +42,7 @@ class PickBuilder(json.JsonObject):
     def raw_selections(self, is_team):
         if is_team:
             return models.FantasySelection.objects.filter(
-                draft_pick__fantasy_team__draft=self.db_object.draft)
+                draft_pick__fantasy_team=self.db_object)
         else:
             return models.FantasySelection.objects.filter(
                 draft_pick__fantasy_team__draft=self.db_object)
