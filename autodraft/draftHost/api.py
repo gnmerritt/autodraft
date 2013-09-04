@@ -14,9 +14,9 @@ urlpatterns = patterns('draftHost.views',
         views.player_status, name='player_status'),
 
     # Search views
-    url(r'^search/name/(?P<name>\w+)/?$',
+    url(r'^search/name/(?P<name>[-a-zA-Z]+)/?$',
         views.search, name='search'),
-    url(r'^search/name/(?P<name>\w+)/pos/(?P<position>\w{2,3})?/?$',
+    url(r'^search/name/(?P<name>[-a-zA-Z]+)/pos/(?P<position>\w{1,3})?/?$',
         views.search, name='search_name_pos'),
 
     url(r'^team/(?P<id>\d+)/?$', views.team_id, name='team_id'),
@@ -32,7 +32,7 @@ urlpatterns = patterns('draftHost.views',
     url(r'^nfl/conferences/?$', views.nfl_conferences, name='nfl_conferences'),
     url(r'^nfl/divisions/?$', views.nfl_divisions, name='nfl_divisions'),
     url(r'^nfl/positions/?$', 'nfl_positions'),
-    url(r'^nfl/position/(?P<position>\w{2,3})/?$',
+    url(r'^nfl/position/(?P<position>\w{1,3})/?$',
         views.search, name='position_players'),
 
     # College data methods
