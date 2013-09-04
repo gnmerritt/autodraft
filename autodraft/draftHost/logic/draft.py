@@ -15,6 +15,8 @@ class PickBuilder(json.JsonObject):
     Constructor argument should be a FantasyDraft model object"""
     functions = ['picks', 'selections',]
 
+    now = None
+
     # These will be for the draft db object, so suppress them
     show_name = False
     show_id = False
@@ -29,6 +31,7 @@ class PickBuilder(json.JsonObject):
                 fantasy_team__draft=self.db_object)
         for pick in picks:
             json = fantasy.JsonFantasyPick(pick)
+            json.now = self.now
             json.show_team = not is_team
             json_picks.append(json.json_dict())
         return json_picks

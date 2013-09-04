@@ -32,6 +32,7 @@ def draft_id(request, id):
 def picks(request):
     context = get_context_or_error(request)
     picks = draft.PickBuilder(context.draft)
+    picks.now = timezone.now()
     return picks.json_response(request)
 
 @ratelimit(rate="10/m", block=True)
