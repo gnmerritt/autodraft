@@ -18,8 +18,6 @@ urlpatterns = patterns('draftHost.views',
         views.search, name='search'),
     url(r'^search/name/(?P<name>\w+)/pos/(?P<position>\w{2})?/?$',
         views.search, name='search_name_pos'),
-    url(r'^nfl/position/(?P<position>\w{2})/?$',
-        views.search, name='position_players'),
 
     url(r'^team/(?P<id>\d+)/?$', views.team_id, name='team_id'),
     url(r'^team/(?P<id>\d+)/players/?$',
@@ -34,6 +32,8 @@ urlpatterns = patterns('draftHost.views',
     url(r'^nfl/conferences/?$', views.nfl_conferences, name='nfl_conferences'),
     url(r'^nfl/divisions/?$', views.nfl_divisions, name='nfl_divisions'),
     url(r'^nfl/positions/?$', 'nfl_positions'),
+    url(r'^nfl/position/(?P<position>\w{2,3})/?$',
+        views.search, name='position_players'),
 
     # College data methods
     url(r'^colleges/?$', views.colleges, name='colleges'),
