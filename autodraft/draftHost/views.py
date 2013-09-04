@@ -67,17 +67,17 @@ def search(request, name=None, position=None):
 
 def team_id(request, id):
     team = get_object_or_404(models.FantasyTeam, pk=id)
-    return team_response(team)
+    return team_response(team, request)
 
 def team_info_name(request, name):
     team = get_object_or_404(models.FantasyTeam, name=name)
-    return team_response(team)
+    return team_response(team, request)
 
 def current_team(request):
     context = get_context_or_error(request)
-    return team_response(context.team)
+    return team_response(context.team, request)
 
-def team_response(db_team):
+def team_response(db_team, request):
     json_team = fantasy.JsonFantasyTeam(db_team)
     return json_team.json_response(request)
 
