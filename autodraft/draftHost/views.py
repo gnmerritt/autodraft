@@ -22,17 +22,17 @@ def get_context_or_error(request):
 @ratelimit(rate="30/m", block=True)
 def draft_key(request):
     context = get_context_or_error(request)
-    return fantasy.JsonFantasyDraft(context.draft).json_response()
+    return fantasy.JsonFantasyDraft(context.draft).json_response(request)
 
 @ratelimit(rate="30/m", block=True)
 def draft_id(request, id):
     draft = get_object_or_404(models.FantasyDraft, pk=id)
-    return fantasy.JsonFantasyDraft(draft).json_response()
+    return fantasy.JsonFantasyDraft(draft).json_response(request)
 
 def picks(request):
     context = get_context_or_error(request)
     picks = draft.PickBuilder(context.draft)
-    return picks.json_response()
+    return picks.json_response(request)
 
 @ratelimit(rate="10/m", block=True)
 def make_pick(request, player_id):
@@ -42,12 +42,12 @@ def make_pick(request, player_id):
     player = get_object_or_404(models.NflPlayer, pk=player_id)
     validator = draft.PickValidator(context)
     validator.draft_player(player)
-    return validator.get_response()
+    return validator.get_response(request)
 
 def player(request, uid):
     db_player = get_object_or_404(models.NflPlayer, pk=uid)
     json_player = nfl.JsonNflPlayer(db_player)
-    return json_player.json_response()
+    return json_player.json_response(request)
 
 def player_status(request, uid):
     db_player = get_object_or_404(models.NflPlayer, pk=uid)
@@ -55,7 +55,7 @@ def player_status(request, uid):
     json_player = nfl.JsonNflPlayer(db_player)
     json_player.draft = context.draft
     json_player.show_fantasy_team = True
-    return json_player.json_response()
+    return json_player.json_response(request)
 
 @ratelimit(block=True)
 def search(request, name=None, position=None):
@@ -63,7 +63,7 @@ def search(request, name=None, position=None):
       .name(name) \
       .position(position) \
       .json_results() \
-      .json_response()
+      .json_response(request)
 
 def team_id(request, id):
     team = get_object_or_404(models.FantasyTeam, pk=id)
@@ -79,13 +79,13 @@ def current_team(request):
 
 def team_response(db_team):
     json_team = fantasy.JsonFantasyTeam(db_team)
-    return json_team.json_response()
+    return json_team.json_response(request)
 
 def fantasy_team_players(request, id):
     team = get_object_or_404(models.FantasyTeam, pk=id)
     json_team = fantasy.JsonFantasyTeam(team)
     json_team.show_players = True
-    return json_team.json_response()
+    return json_team.json_response(request)
 
 def nfl_teams(request):
     teams = models.NflTeam.objects.all().exclude(name="Unknown")
@@ -101,7 +101,7 @@ def nfl_team_with_players(request, id, include_players=True):
     json_team = nfl.JsonNflTeam(team)
     if include_players:
         json_team.show_players = True
-    return json_team.json_response()
+    return json_team.json_response(request)
 
 def nfl_divisions(request):
     divisions = models.NflDivision.objects.all()
@@ -133,7 +133,7 @@ def college_players(request, id):
     c = get_object_or_404(models.College, pk=id)
     college_json = college.JsonCollege(c)
     college_json.show_players = True
-    return college_json.json_response()
+    return college_json.json_response(request)
 
 def my_team(request, key):
     team = get_object_or_404(models.FantasyTeam, auth_key=key)

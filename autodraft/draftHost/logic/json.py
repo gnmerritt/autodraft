@@ -3,8 +3,13 @@ import simplejson as json
 from django.http import HttpResponse
 from dateutil.relativedelta import relativedelta
 
-def obj_to_json(object):
-    return HttpResponse(json.dumps(object), mimetype="application/json")
+
+def obj_to_json(object, request):
+    data = json.dumps(object)
+    if 'callback' in request.REQUEST:
+        # a jsonp response!
+        data = '%s(%s);' % (request.REQUEST['callback'], data)
+    return HttpResponse(data, mimetype="application/json")
 
 
 class JsonObject(object):
@@ -78,9 +83,9 @@ class JsonObject(object):
         included = not hasattr(self, show_name) or getattr(self, show_name)
         return included
 
-    def json_response(self):
+    def json_response(self, request):
         json_dict = self.json_dict()
-        return obj_to_json(json_dict)
+        return obj_to_json(json_dict, request)
 
     def json_string(self):
         json_dict = self.json_dict()

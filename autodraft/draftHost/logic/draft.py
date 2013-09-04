@@ -190,10 +190,10 @@ class PickValidator(object):
         )
         return selections
 
-    def get_response(self):
+    def get_response(self, request):
         self.code = self.status[0]
         self.message = self.status[1]
-        return JsonPickResponse(self).json_response()
+        return JsonPickResponse(self).json_response(request)
 
 
 class JsonPickResponse(json.JsonObject):
