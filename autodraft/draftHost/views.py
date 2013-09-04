@@ -226,6 +226,7 @@ def draft_detail(request, id, ajax_only=False):
     else:
         return render(request, 'draftHost/draft.html', context)
 
+@ratelimit(rate="10/m", block=True)
 def draft_pick_ajax(request, id):
     return draft_detail(request, id, ajax_only=True)
 
