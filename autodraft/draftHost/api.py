@@ -16,7 +16,7 @@ urlpatterns = patterns('draftHost.views',
     # Search views
     url(r'^search/name/(?P<name>\w+)/?$',
         views.search, name='search'),
-    url(r'^search/name/(?P<name>\w+)/pos/(?P<position>\w{2})?/?$',
+    url(r'^search/name/(?P<name>\w+)/pos/(?P<position>\w{2,3})?/?$',
         views.search, name='search_name_pos'),
 
     url(r'^team/(?P<id>\d+)/?$', views.team_id, name='team_id'),

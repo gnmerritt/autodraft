@@ -57,7 +57,6 @@ def player_status(request, uid):
     json_player.show_fantasy_team = True
     return json_player.json_response(request)
 
-@ratelimit(block=True)
 def search(request, name=None, position=None):
     return s.SearchRunner() \
       .name(name) \
