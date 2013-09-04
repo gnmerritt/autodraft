@@ -18,7 +18,8 @@ class JsonFantasyDraft(JsonObject):
                  'teams',
                  'roster',
                  'draft_start',
-                 'current_time',]
+                 'current_time',
+                 'selections',]
 
     @ReadOnlyCachedAttribute
     def teams(self):
@@ -43,6 +44,18 @@ class JsonFantasyDraft(JsonObject):
 
     def get_current_time(self):
         return JsonTime(d.datetime.now()).json_dict()
+
+    def get_selections(self):
+        selections_queryset = models.FantasySelection.objects.filter(
+            draft_pick__fantasy_team__draft=self.db_object
+        )
+        selections = []
+        for s in selections_queryset:
+            json = JsonFantasySelection(s)
+            json.show_team = True
+            selections.append(json.json_dict())
+
+        return selections
 
 
 class JsonFantasyTeam(JsonObject):

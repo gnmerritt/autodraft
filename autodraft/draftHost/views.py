@@ -79,6 +79,7 @@ def current_team(request):
 
 def team_response(db_team, request):
     json_team = fantasy.JsonFantasyTeam(db_team)
+    json_team.show_players = True
     return json_team.json_response(request)
 
 def fantasy_team_players(request, id):

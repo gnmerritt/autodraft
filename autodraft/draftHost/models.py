@@ -145,8 +145,9 @@ class FantasyPick(models.Model):
         ordering = ('pick_number',)
 
     def __unicode__(self):
-        return "{d} - Pick {n}" \
-          .format(d=self.fantasy_team.draft.name, n=self.pick_number)
+        return "{d} - Pick {n} - {t}" \
+          .format(d=self.fantasy_team.draft.name, n=self.pick_number,
+                  t=self.fantasy_team.name)
 
     def is_active(self, time):
         """Returns whether the time is between start & expire"""
