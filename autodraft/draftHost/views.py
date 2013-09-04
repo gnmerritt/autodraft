@@ -98,7 +98,7 @@ def fantasy_team_players(request, id):
 def nfl_teams(request):
     teams = models.NflTeam.objects.all().exclude(name="Unknown")
     teams_json = [nfl.JsonNflTeam(t).json_dict() for t in teams]
-    return json.obj_to_json({'teams': teams_json})
+    return json.obj_to_json({'teams': teams_json}, request)
 
 def nfl_team(request, id):
     return nfl_team_with_players(request, id, include_players=False)
@@ -115,26 +115,26 @@ def nfl_divisions(request):
     divisions = models.NflDivision.objects.all()
     divisons_json = [nfl.JsonNflDivision(d).json_dict()
                      for d in divisions]
-    return json.obj_to_json({'divisions':divisons_json})
+    return json.obj_to_json({'divisions':divisons_json}, request)
 
 def nfl_conferences(request):
     conferences = models.NflConference.objects.all()
     conferences_json = [nfl.JsonNflConference(c).json_dict()
                         for c in conferences]
-    return json.obj_to_json({'conferences':conferences_json})
+    return json.obj_to_json({'conferences':conferences_json}, request)
 
 def nfl_positions(request):
     positions = models.NflPosition.objects.all()
     positions_json = [nfl.JsonNflPosition(p).json_dict()
                       for p in positions]
-    return json.obj_to_json({'positions':positions_json})
+    return json.obj_to_json({'positions':positions_json}, request)
 
 def colleges(request):
     colleges = models.College.objects.all().exclude(name="Unknown")
     colleges_json = []
     for c in colleges:
         colleges_json.append(college.JsonCollege(c).json_dict())
-    return json.obj_to_json({'colleges':colleges_json})
+    return json.obj_to_json({'colleges':colleges_json}, request)
 
 @ratelimit(block=True)
 def college_players(request, id):
