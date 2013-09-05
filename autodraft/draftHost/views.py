@@ -155,12 +155,14 @@ def my_team(request, key):
 
 @ratelimit(rate="60/m", block=True)
 def index(request):
-    drafts = [fantasy.JsonFantasyDraft(k).json_dict()
-              for k in models.FantasyDraft.objects.all()]
-    for draft in [d for d in drafts
-                  if len(d['teams']) < d['team_limit']]:
-        form = auth.TeamRegisterForm()
-        draft['registration'] = form
+    now = timezone.now()
+    drafts = []
+    for d in models.FantasyDraft.objects.all():
+        json = fantasy.JsonFantasyDraft(d).json_dict()
+        if d.draft_start > now and \
+          len(json['teams']) < d.team_limit:
+            json['registration'] = auth.TeamRegisterForm()
+        drafts.append(json)
     drafts.sort(key=lambda d: d['draft_start']['utc'])
     context = {
         'drafts': drafts,
