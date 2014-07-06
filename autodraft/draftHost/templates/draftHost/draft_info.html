@@ -8,7 +8,13 @@
     <div><a href="{% url 'draftHost:draft' draft.id %}">Detail page</a></div>
     <div>Roster: {{ draft.roster.description }} ({{ draft.roster.slots }} slots)</div>
     <div>
-      <span>Draft starts at {{ draft.draft_start.str }},</span>
+      <span>
+      {% if draft.active %}
+        Draft starts at
+      {% else %}
+        Draft started at
+      {% endif %}
+      {{ draft.draft_start.str }},</span>
       <span>{{ draft.time_per_pick_s }} seconds / pick</span>
     </div>
   </div>

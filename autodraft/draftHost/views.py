@@ -159,11 +159,13 @@ def index(request):
     drafts = []
     for d in models.FantasyDraft.objects.all():
         json = fantasy.JsonFantasyDraft(d).json_dict()
-        if d.draft_start > now and \
-          len(json['teams']) < d.team_limit:
-            json['registration'] = auth.TeamRegisterForm()
+        if d.draft_start > now:
+            json['active'] = True
+
+            if len(json['teams']) < d.team_limit:
+                json['registration'] = auth.TeamRegisterForm()
         drafts.append(json)
-    drafts.sort(key=lambda d: d['draft_start']['utc'])
+    drafts.sort(key=lambda d: d['draft_start']['utc'], reverse=True)
     context = {
         'drafts': drafts,
     }
