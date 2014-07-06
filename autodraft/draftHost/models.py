@@ -96,6 +96,8 @@ class FantasyRoster(models.Model):
     description = models.TextField() ## TODO: this should be more than a text field?
     slots = models.PositiveIntegerField()
 
+    def __unicode__(self):
+        return self.description
 
 class FantasyDraft(models.Model):
     name = models.TextField(max_length=20)
