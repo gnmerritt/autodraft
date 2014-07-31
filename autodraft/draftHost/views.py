@@ -219,7 +219,7 @@ def draft_detail(request, id, ajax_only=False):
         json.now = now
         picks.append(json.json_dict())
     picks.sort(key=lambda p: p['pick_number'])
-    shown_picks = len(json_draft['teams']) + 1
+    shown_picks = len(json_draft['teams']) + 5
 
     context = {
         'draft': json_draft,
