@@ -25,7 +25,7 @@ class NflTeam(models.Model):
     division = models.ForeignKey(NflDivision)
 
     def __unicode__(self):
-        return "{c} {n}".format(c=self.city, n=self.name)
+        return u"{c} {n}".format(c=self.city, n=self.name)
 
 
 class NflPosition(models.Model):
@@ -62,7 +62,7 @@ class NflPlayer(models.Model):
     fantasy_position = models.ForeignKey(FantasyPosition)
 
     def __unicode__(self):
-        return "{f} {l}".format(f=self.first_name, l=self.last_name)
+        return u"{f} {l}".format(f=self.first_name, l=self.last_name)
 
 
 class ExternalDatabase(models.Model):
@@ -147,7 +147,7 @@ class FantasyPick(models.Model):
         ordering = ('pick_number',)
 
     def __unicode__(self):
-        return "{d} - Pick {n} - {t}" \
+        return u"{d} - Pick {n} - {t}" \
           .format(d=self.fantasy_team.draft.name, n=self.pick_number,
                   t=self.fantasy_team.name)
 
