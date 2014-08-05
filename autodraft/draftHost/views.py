@@ -35,7 +35,7 @@ def picks(request):
     picks.now = timezone.now()
     return picks.json_response(request)
 
-@ratelimit(rate="10/m")
+@ratelimit(rate="20/m", field='key')
 def make_pick(request, player_id):
     if request.method == "POST" or request.method == "GET":
         context = get_context_or_error(request)
@@ -65,7 +65,6 @@ def player_status(request, uid):
     json_player.show_fantasy_team = True
     return json_player.json_response(request)
 
-@ratelimit("60/m", block=True)
 def search(request, name=None, position=None):
     return s.SearchRunner() \
       .name(name) \
@@ -104,7 +103,7 @@ def nfl_teams(request):
 def nfl_team(request, id):
     return nfl_team_with_players(request, id, include_players=False)
 
-@ratelimit(block=True)
+@ratelimit(rate='10/m', block=True)
 def nfl_team_with_players(request, id, include_players=True):
     team = get_object_or_404(models.NflTeam, pk=id)
     json_team = nfl.JsonNflTeam(team)
@@ -153,7 +152,7 @@ def my_team(request, key):
     }
     return render(request, 'draftHost/team_page.html', context)
 
-@ratelimit(rate="60/m", block=True)
+@ratelimit(rate="20/m")
 def index(request):
     now = timezone.now()
     drafts = []
@@ -233,7 +232,7 @@ def draft_detail(request, id, ajax_only=False):
     else:
         return render(request, 'draftHost/draft.html', context)
 
-@ratelimit(rate="60/m", block=True)
+@ratelimit(rate="100/m", block=True)
 def draft_pick_ajax(request, id):
     return draft_detail(request, id, ajax_only=True)
 

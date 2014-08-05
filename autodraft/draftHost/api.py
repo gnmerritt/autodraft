@@ -14,9 +14,9 @@ urlpatterns = patterns('draftHost.views',
         views.player_status, name='player_status'),
 
     # Search views
-    url(r'^search/name/(?P<name>[-a-zA-Z]+)/?$',
+    url(r'^search/name/(?P<name>[-\%\w]+)/?$',
         views.search, name='search'),
-    url(r'^search/name/(?P<name>[-a-zA-Z]+)/pos/(?P<position>\w{1,3})?/?$',
+    url(r'^search/name/(?P<name>[-\%\'\w]+)/pos/(?P<position>\w{1,3})?/?$',
         views.search, name='search_name_pos'),
 
     url(r'^team/(?P<id>\d+)/?$', views.team_id, name='team_id'),
