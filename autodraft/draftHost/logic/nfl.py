@@ -32,7 +32,8 @@ class JsonNflPlayer(JsonObject):
     def get_fantasy_team(self):
         if not self.draft:
             return False
-        selections = models.FantasySelection.objects.filter(player=self.db_object)
+        selections = models.FantasySelection.objects.filter(player=self.db_object,
+                         player__draft_pick__fantasy_team__draft=self.draft)
         if not selections:
             return False
         fantasy_team = selections[0].draft_pick.fantasy_team
