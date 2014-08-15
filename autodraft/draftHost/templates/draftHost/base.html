@@ -12,43 +12,50 @@
   td:last-child, th:last-child { border-right-width:0; }
   tr:last-child td { border-bottom-width:0; }
 
-  .sidebar { float:left; height:600px; width:250px; border-right:1px solid #333; }
-  .content { margin-left:275px; }
-
   #TWITTER { margin-top:50px; }
 </style>
 <title>{% block title %}Fantasy Football Drafting API{% endblock %}</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link href="{{ STATIC_URL }}bs/css/bootstrap.min.css" rel="stylesheet" media="screen">
+<link href="{{ STATIC_URL }}bs/css/bootstrap-responsive.min.css" rel="stylesheet">
 </head>
 <body>
 
+<div class="container-fluid">
+
 {% block sidebar %}
-<div class="sidebar">
+<div class="span4">
   <h3>Autodraft - Fantasy Football API</h3>
 
   <p>Because drafting a fantasy football team by hand is lame</p>
+
+  <h4>Links</h4>
 
   <ul>
     <li><a href="{% url 'draftHost:index' %}">Home</a></li>
     <li><a href="{% url 'draftHost:documentation' %}">Documentation</a></li>
     <li><a href="https://github.com/gnmerritt/autodraft" target="_">GitHub Page</a></li>
-    <li>Reference bot implementation <a href="https://github.com/gnmerritt/fantasy-bot">lives here</a></li>
-
-    <li><span>News:</span>
-      <ul>
-        <li>Created the 2014 drafts! Welcome back!</li>
-        <li>Direct smack talk to #autodraft2014</li>
-      </ul>
-    </li>
+    <li><a href="https://github.com/gnmerritt/fantasy-bot">Reference bot implementation</a></li>
   </ul>
+
+  <h4>News</h4>
+
+  <ul>
+    <li>Created the 2014 drafts! Welcome back!</li>
+    <li>Direct smack talk to #autodraft2014</li>
+  </ul>
+
 </div>
 
 <a href="https://github.com/gnmerritt/autodraft/" target="_"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png" alt="Fork me on GitHub"></a>
 {% endblock %}
 
-<div class="content">
+<div class="span8">
   {% block content %}{% endblock %}
 </div>
+
+</div> <!-- end container-fluid -->
 
 <script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
