@@ -11,14 +11,14 @@
 
   <div>Current teams ({{ draft.teams|length }} / {{ draft.team_limit }}):</div>
 
-  <table class="teams">
+  <table class="table table-bordered table-striped">
     <tr>
       <th>Team</th>
       <th>Manager</th>
       <th>API Link</th>
     </tr>
     {% for team in draft.teams %}
-    <tr class="{% cycle 'white' 'grey' %}">
+    <tr>
       <td>{{ team.name }}</td>
       <td>{{ team.email }}</td>
       <td><a href="{% url 'draftHost:api:team_id' team.id %}">JSON Link</a></td>
@@ -30,6 +30,7 @@
       <td>
         <span>Spots still open for this draft -- Register below:</span>
       </td>
+      <td><td>
     </tr>
     <tr>
       {% include 'draftHost/reg_form.html' %}
@@ -42,6 +43,6 @@
 
 <h2>No drafts with open spots?</h2>
 
-<p>TODO contact info here</p>
+<p>Try a mock draft! Available to everybody who's registered for an upcoming draft</p>
 
 {% endblock %}

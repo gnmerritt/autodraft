@@ -4,14 +4,6 @@
   .draftList, .calls { list-style:none; }
   .draft .name { margin-left:-30px; font-weight:bold; }
   .info { margin-left:50px; }
-
-  table { margin:20px 0; border:1px solid #333; }
-  td, th { padding:5px; border-right:1px solid #333; border-bottom:1px solid #333; }
-  tr.grey { background-color:#EEE; }
-  tr.active { font-weight:bold; background-color:yellow }
-  td:last-child, th:last-child { border-right-width:0; }
-  tr:last-child td { border-bottom-width:0; }
-
   #TWITTER { margin-top:50px; }
 </style>
 <title>{% block title %}Fantasy Football Drafting API{% endblock %}</title>
@@ -21,6 +13,8 @@
 <link href="{{ STATIC_URL }}bs/css/bootstrap-responsive.min.css" rel="stylesheet">
 </head>
 <body>
+
+<a href="https://github.com/gnmerritt/autodraft/" target="_"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png" alt="Fork me on GitHub"></a>
 
 <div class="container-fluid">
 
@@ -47,8 +41,6 @@
   </ul>
 
 </div>
-
-<a href="https://github.com/gnmerritt/autodraft/" target="_"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png" alt="Fork me on GitHub"></a>
 {% endblock %}
 
 <div class="span8">
@@ -68,6 +60,6 @@
 </script>
 
 <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
-<script src="{{ STATIC_URL }}js/bootstrap.min.js"></script>
+<script src="{{ STATIC_URL }}bs/js/bootstrap.min.js"></script>
 </body>
 </html>
