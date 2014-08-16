@@ -1,3 +1,5 @@
+import datetime
+
 from django.http import HttpResponse, HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.shortcuts import get_object_or_404, render
@@ -158,7 +160,7 @@ def index(request):
     drafts = []
     for d in models.FantasyDraft.objects.all():
         json = fantasy.JsonFantasyDraft(d).json_dict()
-        if d.draft_start > now:
+        if d.draft_start > now + datetime.timedelta(hours=1):
             json['active'] = True
 
             if len(json['teams']) < d.team_limit:
