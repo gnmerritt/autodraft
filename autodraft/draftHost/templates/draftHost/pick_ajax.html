@@ -2,7 +2,7 @@
 {% if forloop.first %}
 <h3>Upcoming picks:</h3>
 
-<table class="picks">
+<table class="table table-bordered table-striped">
   <tr>
     <th>Pick</th>
     <th>Owner</th>
@@ -11,7 +11,7 @@
   </tr>
 {% endif %}
 
-  <tr class="row {% cycle 'white' 'grey' %}{% if p.active %} active{% endif %}">
+  <tr class="row {% if p.active %} active{% endif %}">
     <td>{{ p.pick_number }}</td>
     <td>{{ p.team.name }}</td>
 
