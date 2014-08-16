@@ -11,7 +11,7 @@
   </tr>
 {% endif %}
 
-  <tr class="row {% if p.active %} active{% endif %}">
+  <tr class="{% if p.active %} active{% endif %}">
     <td>{{ p.pick_number }}</td>
     <td>{{ p.team.name }}</td>
 

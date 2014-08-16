@@ -1,6 +1,6 @@
 {% for s in selections %}
 {% if forloop.first %}
-<table class="selections">
+<table class="selections table table-bordered table-striped">
   <tr>
     <th>Pick</th>
     <th>Player</th>
@@ -9,7 +9,7 @@
   </tr>
 {% endif %}
 
-  <tr class="{% cycle 'white' 'grey' %}">
+  <tr>
     <td>{{ s.draft_pick.pick_number }}</td>
     <td>{{ s.player.first_name }} {{ s.player.last_name }}</td>
     <td>{{ s.team.name }}</td>
