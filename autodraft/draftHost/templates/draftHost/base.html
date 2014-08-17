@@ -2,7 +2,7 @@
 <head>
 <style type="text/css">
   .draftList, .calls { list-style:none; }
-  .draft .name { margin-left:-30px; font-weight:bold; }
+  .draft .name { font-weight:bold; }
   .info { margin-left:50px; }
   #TWITTER { margin-top:50px; }
 </style>
@@ -33,13 +33,21 @@
     <li><a href="https://github.com/gnmerritt/fantasy-bot">Reference bot implementation</a></li>
   </ul>
 
+  {% if team_name %}
+  <h4>Your team</h4>
+
+  <ul>
+    <li><a href="{% url 'draftHost:my_team' draftKey %}">{{ team_name }} info</a></li>
+    <li><a>Run a mock draft</a></li>
+  </ul>
+  {% endif %}
+
   <h4>News</h4>
 
   <ul>
     <li>Created the 2014 drafts! Welcome back!</li>
     <li>Direct smack talk to #autodraft2014</li>
   </ul>
-
 </div>
 {% endblock %}
 
