@@ -241,3 +241,10 @@ def draft_pick_ajax(request, id):
 
 def documentation(request):
     return render(request, 'draftHost/documentation.html', {})
+
+def mock_draft(request):
+    context = {}
+    if request.method == "POST":
+        return render(request, 'draftHost/mock_draft_ajax.html', context)
+    else:
+        return render(request, 'draftHost/mock_draft.html', context)

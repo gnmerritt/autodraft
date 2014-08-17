@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <head>
 <style type="text/css">
+  .pageContent { margin:30px 0; }
   .draftList, .calls { list-style:none; }
   .draft .name { font-weight:bold; }
   .info { margin-left:50px; }
@@ -16,7 +17,7 @@
 
 <a href="https://github.com/gnmerritt/autodraft/" target="_"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png" alt="Fork me on GitHub"></a>
 
-<div class="container-fluid">
+<div class="container-fluid pageContent">
 
 {% block sidebar %}
 <div class="span4">
@@ -37,8 +38,17 @@
   <h4>Your team</h4>
 
   <ul>
-    <li><a href="{% url 'draftHost:my_team' draftKey %}">{{ team_name }} info</a></li>
-    <li><a>Run a mock draft</a></li>
+    <li><a href="{% url 'draftHost:my_team' draftKey %}">{{ team_name }}</a></li>
+    <li><a href="{% url 'draftHost:mock_draft' %}">Create a mock draft</a></li>
+    {% if mock_drafts %}
+      <li>Your mock drafts:
+      <ul>
+        {% for d in mock_drafts %}
+          <li><a href="{% url 'draftHost:draft' d.draft.id %}">{{ d.draft.name }}</a></li>
+        {% endfor %}
+      </ul>
+      </li>
+    {% endif %}
   </ul>
   {% endif %}
 

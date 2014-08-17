@@ -120,6 +120,7 @@ class FantasyDraft(models.Model):
                 return True
         return False
 
+
 class FantasyTeam(models.Model):
     draft = models.ForeignKey(FantasyDraft)
     name = models.TextField(max_length=80)
@@ -134,6 +135,12 @@ class FantasyTeam(models.Model):
 
     def remove_picks(self):
         self.picks().delete()
+
+
+class MockDraft(models.Model):
+    """Ties together an existing fantasy team & a separate draft"""
+    owner = models.ForeignKey(FantasyTeam)
+    draft = models.ForeignKey(FantasyDraft)
 
 
 class FantasyPick(models.Model):

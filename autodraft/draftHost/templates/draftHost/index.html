@@ -43,6 +43,10 @@
 
 <h2>No drafts with open spots?</h2>
 
-<p>Try a mock draft! Available to everybody who's registered for an upcoming draft</p>
+{% if team_name %}
+  <p><a href="{% url 'draftHost:mock_draft' %}">Try a mock draft!</a> Available to everybody who's registered for an upcoming draft</p>
+{% else %}
+  <p>Try a mock draft! Available to everybody who's registered for an upcoming draft</p>
+{% endif %}
 
 {% endblock %}

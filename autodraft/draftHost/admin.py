@@ -23,3 +23,6 @@ admin.site.register(models.FantasyRoster)
 # Created per-draft by the singup page:
 admin.site.register(models.FantasyDraft)
 admin.site.register(models.FantasyTeam)
+
+# Mock drafts tie together a fantasy team & draft
+admin.site.register(models.MockDraft)
