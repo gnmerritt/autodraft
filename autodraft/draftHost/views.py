@@ -159,7 +159,10 @@ def my_team(request, key):
 def index(request):
     now = timezone.now()
     drafts = []
-    for d in models.FantasyDraft.objects.all():
+    mock_drafts = models.MockDraft.objects.all()
+
+    for d in models.FantasyDraft.objects.exclude(
+            id__in = [x.draft.id for x in mock_drafts]):
         json = fantasy.JsonFantasyDraft(d).json_dict()
         if d.draft_start > now + datetime.timedelta(hours=1):
             json['active'] = True
