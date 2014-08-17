@@ -4,6 +4,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.shortcuts import get_object_or_404, render
 from django.utils import timezone
+from django.conf import settings
 import django.http.response
 from django.core.exceptions import PermissionDenied
 
@@ -20,6 +21,18 @@ def get_context_or_error(request):
     if context.is_valid():
         return context
     raise django.core.exceptions.PermissionDenied("invalid auth key")
+
+def set_cookie(response, key, value, days_expire = 7):
+    if days_expire is None:
+        max_age = 365 * 24 * 60 * 60  #one year
+    else:
+        max_age = days_expire * 24 * 60 * 60
+    expire_time = datetime.datetime.utcnow() + datetime.timedelta(seconds=max_age)
+    expires = datetime.datetime.strftime(expire_time,
+                                         "%a, %d-%b-%Y %H:%M:%S GMT")
+    response.set_cookie(key, value, max_age=max_age, expires=expires,
+                        domain=settings.SESSION_COOKIE_DOMAIN,
+                        secure=settings.SESSION_COOKIE_SECURE or None)
 
 @ratelimit(rate="30/m")
 def draft_key(request):
@@ -152,7 +165,9 @@ def my_team(request, key):
         'team': team,
         'draft': draft.json_dict(),
     }
-    return render(request, 'draftHost/team_page.html', context)
+    response = render(request, 'draftHost/team_page.html', context)
+    set_cookie(response, 'draftKey', key)
+    return response
 
 @ratelimit(rate="20/m")
 def index(request):
