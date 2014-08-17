@@ -12,6 +12,7 @@ from draftHost import models
 from draftHost.logic import nfl, fantasy, auth, draft, json, college
 from draftHost.logic import search as s
 from draftHost.logic.auth import AuthContext as AuthContext
+import draftHost.logic.site
 
 def get_context_or_error(request):
     """Tries to build a AuthContext, raises an error on failure"""
@@ -246,8 +247,13 @@ def documentation(request):
     return render(request, 'draftHost/documentation.html', {})
 
 def mock_draft(request):
-    context = {}
-    if request.method == "POST":
-        return render(request, 'draftHost/mock_draft_ajax.html', context)
-    else:
-        return render(request, 'draftHost/mock_draft.html', context)
+    form = draftHost.logic.site.MockDraftForm(request.POST or None)
+    if form.is_valid():
+        team, _ = draftHost.logic.site.team_from_request(request)
+        draft = form.save()
+        mock_draft = models.MockDraft(owner=team, draft=draft)
+        mock_draft.save()
+    context = {
+        'form': form
+    }
+    return render(request, 'draftHost/mock_draft.html', context)
