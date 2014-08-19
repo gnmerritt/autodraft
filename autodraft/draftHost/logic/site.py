@@ -26,8 +26,7 @@ def draft_user(request):
 
 class MockDraftForm(forms.ModelForm):
     """Form for creating a new FantasyDraft"""
-    name = forms.CharField(initial="Autodraft Mock Draft",
-                           widget=forms.HiddenInput())
+    name = forms.CharField(initial="ignored", widget=forms.HiddenInput())
     admin = forms.EmailField(initial="mockdrafts@blackhole.gnmerritt.net",
                              widget=forms.HiddenInput())
     draft_start = forms.DateTimeField(
@@ -42,3 +41,7 @@ class MockDraftForm(forms.ModelForm):
         model = models.FantasyDraft
         fields = ['name', 'admin', 'draft_start', 'time_per_pick',
                   'team_limit', 'roster']
+
+    def clean_name(self):
+        draft_num = models.MockDraft.objects.all().count() + 1
+        return "Autodraft Mock Draft #{}".format(draft_num)
