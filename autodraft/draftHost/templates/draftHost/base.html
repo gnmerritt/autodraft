@@ -55,6 +55,8 @@
       </li>
     {% endif %}
   </ul>
+  {% else %}
+  <h4>Visit your <a href="{% url 'draftHost:my_team' 'your-key-goes-here' %}">my_team</a> page to log in & access mock drafts</h4>
   {% endif %}
 
   <h4>News</h4>

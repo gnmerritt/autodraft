@@ -146,6 +146,8 @@ def college_players(request, id):
     return college_json.json_response(request)
 
 def my_team(request, key):
+    if key == 'your-key-goes-here':
+        return render(request, 'draftHost/team_hint.html', {})
     team = get_object_or_404(models.FantasyTeam, auth_key=key)
     draft = fantasy.JsonFantasyDraft(team.draft)
     context = {
