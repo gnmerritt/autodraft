@@ -1,0 +1,51 @@
+<form id="MOCK_DRAFT" method="POST">
+
+  <div class="row">
+    <div class="span3">
+      <h3>Draft Settings</h3>
+      <div id="datetimepicker2" class="input-append">
+        {{ form.draft_start.label_tag }}
+        <input data-format="MM/dd/yyyy HH:mm:ss PP" type="text" name="draft_start" value="{{ form.draft_start.value }}"/>
+        <span class="add-on">
+          <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
+        </span>
+      </div>
+      {{ form.draft_start.errors }}
+
+      {{ form.time_per_pick.errors }} {{ form.time_per_pick.label_tag }}
+      {{ form.time_per_pick }}
+
+      {{ form.team_limit.errors }} {{ form.team_limit.label_tag }}
+      {{ form.team_limit }}
+
+      {{ form.roster.errors }} {{ form.roster.label_tag }}
+      {{ form.roster }}
+
+      {% for hidden in form.hidden_fields %}
+        {{ hidden }}
+      {% endfor %}
+      {% csrf_token %}
+    </div>
+
+    <div class="span3">
+      <h3>Opponent AI settings</h3>
+      <p>Coming soon...</p>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="span2 offset2">
+      <button type="submit" class="btn btn-default btn-lg">Create draft</button>
+    </div>
+  </div>
+
+</form>
+
+<script type="text/javascript">
+  $(function() {
+    $('#datetimepicker2').datetimepicker({
+      language: 'en',
+      pick12HourFormat: true
+    });
+  });
+</script>
