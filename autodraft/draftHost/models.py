@@ -138,10 +138,26 @@ class FantasyTeam(models.Model):
         self.picks().delete()
 
 
+class FantasySeason(models.Model):
+    year = models.TextField(max_length=10) # 2013-2014
+
+    def __unicode__(self):
+        return u"{} Fantasy Season".format(self.year)
+
+
 class MockDraft(models.Model):
     """Ties together an existing fantasy team & a separate draft"""
     owner = models.ForeignKey(FantasyTeam)
     draft = models.ForeignKey(FantasyDraft)
+
+
+class MockDraftBot(models.Model):
+    season = models.ForeignKey(FantasySeason)
+    draft = models.ForeignKey(FantasyDraft)
+    brain = models.TextField(max_length=12)
+
+    def __unicode__(self):
+        return u"{} bot for the {}".format(self.brain, self.season)
 
 
 class FantasyPick(models.Model):
