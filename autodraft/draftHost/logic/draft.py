@@ -60,6 +60,11 @@ class PickAssigner(object):
     def __init__(self, db_draft):
         self.db_draft = db_draft
 
+    def run(self):
+        self.build_teams_from_db()
+        picks = self.assign_picks()
+        self.create_picks(picks)
+
     def build_teams_from_db(self):
         teams = models.FantasyTeam.objects.filter(draft=self.db_draft)
         teams_list = [t for t in teams.iterator()]

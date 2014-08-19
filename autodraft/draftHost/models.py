@@ -99,6 +99,7 @@ class FantasyRoster(models.Model):
     def __unicode__(self):
         return self.description
 
+
 class FantasyDraft(models.Model):
     name = models.TextField(max_length=20)
     admin = models.EmailField()

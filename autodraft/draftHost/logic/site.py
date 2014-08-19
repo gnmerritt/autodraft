@@ -28,12 +28,15 @@ class MockDraftForm(forms.ModelForm):
     """Form for creating a new FantasyDraft"""
     name = forms.CharField(initial="Autodraft Mock Draft",
                            widget=forms.HiddenInput())
-    admin = forms.EmailField(initial="mockdrafts@blackhole.gnmerritt.net" ,
+    admin = forms.EmailField(initial="mockdrafts@blackhole.gnmerritt.net",
                              widget=forms.HiddenInput())
     draft_start = forms.DateTimeField(
         validators=[MinValueValidator(timezone.now())],
-        input_formats=["%m/%d/%Y %I:%M:%S %p"]
-    )
+        input_formats=["%m/%d/%Y %I:%M:%S %p"])
+    team_limit = forms.IntegerField(initial=12,
+                                    validators=[MinValueValidator(4)])
+    time_per_pick = forms.IntegerField(initial=10,
+                                       validators=[MinValueValidator(5)])
 
     class Meta:
         model = models.FantasyDraft

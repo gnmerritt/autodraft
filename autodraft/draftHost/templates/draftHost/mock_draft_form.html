@@ -12,14 +12,17 @@
       </div>
       {{ form.draft_start.errors }}
 
-      {{ form.time_per_pick.errors }} {{ form.time_per_pick.label_tag }}
+      {{ form.time_per_pick.label_tag }}
       {{ form.time_per_pick }}
+      {{ form.time_per_pick.errors }}
 
-      {{ form.team_limit.errors }} {{ form.team_limit.label_tag }}
+      {{ form.team_limit.label_tag }}
       {{ form.team_limit }}
+      {{ form.team_limit.errors }}
 
-      {{ form.roster.errors }} {{ form.roster.label_tag }}
+      {{ form.roster.label_tag }}
       {{ form.roster }}
+      {{ form.roster.errors }}
 
       {% for hidden in form.hidden_fields %}
         {{ hidden }}

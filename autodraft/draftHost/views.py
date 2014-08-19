@@ -145,7 +145,7 @@ def college_players(request, id):
     college_json.show_players = True
     return college_json.json_response(request)
 
-def my_team(request, key):
+def my_team(request, key, write_cookie=True):
     if key == 'your-key-goes-here':
         return render(request, 'draftHost/team_hint.html', {})
     team = get_object_or_404(models.FantasyTeam, auth_key=key)
@@ -155,7 +155,8 @@ def my_team(request, key):
         'draft': draft.json_dict(),
     }
     response = render(request, 'draftHost/team_page.html', context)
-    response.set_cookie('draftKey', key)
+    if write_cookie:
+        response.set_cookie('draftKey', key)
     return response
 
 @ratelimit(rate="20/m")
@@ -248,13 +249,26 @@ def draft_pick_ajax(request, id):
 def documentation(request):
     return render(request, 'draftHost/documentation.html', {})
 
+@ratelimit(rate="5/m", block=True)
 def mock_draft(request):
+    """Endpoint for creating a mock draft"""
     form = draftHost.logic.site.MockDraftForm(request.POST or None)
     if form.is_valid():
         team, _ = draftHost.logic.site.team_from_request(request)
         draft = form.save()
         mock_draft = models.MockDraft(owner=team, draft=draft)
         mock_draft.save()
+        # Make the player's team for the mock draft
+        creator = fantasy.FantasyTeamCreator({
+            'draft_id': draft.id,
+            'name': (team.name + "'s mock draft team")[:80],
+            'email': team.email,
+        })
+        new_team = creator.create_team()
+        # TODO: create bot teams
+        draftHost.logic.draft.PickAssigner(draft).run()
+        return my_team(request, key=new_team.auth_key, write_cookie=False)
+    # If the form isn't valid, return it with errors
     context = {
         'form': form
     }
