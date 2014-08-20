@@ -154,6 +154,7 @@ class MockDraft(models.Model):
 class MockDraftBot(models.Model):
     season = models.ForeignKey(FantasySeason)
     draft = models.ForeignKey(FantasyDraft)
+    team = models.ForeignKey(FantasyTeam)
     brain = models.TextField(max_length=12)
 
     def __unicode__(self):

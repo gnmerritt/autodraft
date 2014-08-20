@@ -9,10 +9,9 @@ import django.http.response
 from brake.decorators import ratelimit
 
 from draftHost import models
-from draftHost.logic import nfl, fantasy, auth, draft, json, college
-from draftHost.logic import search as s
+from draftHost.logic import nfl, fantasy, auth, draft, json, college, site
+from draftHost.logic import search as s, draft as d, mock_draft as m
 from draftHost.logic.auth import AuthContext as AuthContext
-import draftHost.logic.site
 
 def get_context_or_error(request):
     """Tries to build a AuthContext, raises an error on failure"""
@@ -252,12 +251,12 @@ def documentation(request):
 @ratelimit(rate="5/m", block=True)
 def mock_draft(request):
     """Endpoint for creating a mock draft"""
-    form = draftHost.logic.site.MockDraftForm(request.POST or None)
+    form = site.MockDraftForm(request.POST or None)
     if form.is_valid():
-        team, _ = draftHost.logic.site.team_from_request(request)
+        team, _ = site.team_from_request(request)
         draft = form.save()
-        mock_draft = models.MockDraft(owner=team, draft=draft)
-        mock_draft.save()
+        mock_draft_obj = models.MockDraft(owner=team, draft=draft)
+        mock_draft_obj.save()
         # Make the player's team for the mock draft
         creator = fantasy.FantasyTeamCreator({
             'draft_id': draft.id,
@@ -265,8 +264,8 @@ def mock_draft(request):
             'email': team.email,
         })
         new_team = creator.create_team()
-        # TODO: create bot teams
-        draftHost.logic.draft.PickAssigner(draft).run()
+        m.BotTeamCreator(draft, form).run()
+        d.PickAssigner(draft).run()
         return my_team(request, key=new_team.auth_key, write_cookie=False)
     # If the form isn't valid, return it with errors
     context = {
