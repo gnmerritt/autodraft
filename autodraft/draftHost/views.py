@@ -198,7 +198,6 @@ def register(request):
     else:
         raise django.http.response.BadHeaderError("only POST allowed")
 
-@ratelimit(rate="60/m", block=True)
 def draft_detail(request, id, ajax_only=False):
     draft = get_object_or_404(models.FantasyDraft, pk=id)
     json_draft = fantasy.JsonFantasyDraft(draft).json_dict()
@@ -241,7 +240,6 @@ def draft_detail(request, id, ajax_only=False):
     else:
         return render(request, 'draftHost/draft.html', context)
 
-@ratelimit(rate="100/m", block=True)
 def draft_pick_ajax(request, id):
     return draft_detail(request, id, ajax_only=True)
 

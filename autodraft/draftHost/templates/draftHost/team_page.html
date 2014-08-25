@@ -10,7 +10,10 @@
 {% include "draftHost/ex_link.html" with path="draftHost:api:draft" key=team.auth_key %} or to see info on picks/selections so far you'd hit
 {% include "draftHost/ex_link.html" with path="draftHost:api:picks" key=team.auth_key %} picks have been assigned and selections have been made. Picks will be assigned once your draft has filled up with registered teams.</p>
 
-<p>Once picks have been assigned, each pick will include a start and expires UTC timestamp. It's your responsibility to make your pick in the correct time window. You can make a pick by POSTing to a URL of the format: <i>/picks/make/<b>{pick id from the object}</b>/player/<b>{player id}</b>?key={your key}</i>. </p>
+<p>Once picks have been assigned, each pick will include a start and
+expires UTC timestamp. It's your responsibility to make your pick in
+the correct time window. You can make a pick by GET-ing a URL of the
+format: <i>/pick_player/<b>{player id}</b>?key={your key}</i>.</p>
 
 <p>Most non-context-dependent requests can be made without including your key:</p>
 
