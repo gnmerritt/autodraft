@@ -39,7 +39,7 @@ class PlayerImporter(object):
         self.team, _ = models.NflTeam.objects.get_or_create(**{
             'name': 'Unknown',
             'city': 'Unknown',
-            'abbreviation': 'Unknown',
+            'abbreviation': 'UNK',
             'division' : division,
         })
         self.dst = models.FantasyPosition.objects.filter(position__abbreviation="DST")[0]

@@ -9,5 +9,5 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         for json_file in args:
             print "Loading from file {} ...".format(json_file)
-            updater = players_from_json.JsonUpdater(json_file)
+            updater = players_from_json.JsonUpdater(self.stdout, json_file)
             updater.run()

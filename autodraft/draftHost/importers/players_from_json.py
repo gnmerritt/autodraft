@@ -3,17 +3,39 @@ import jsonpickle
 from django.db.models import Q
 from draftHost import models
 
+
 class GlobalData(object):
-    pass
+    def __init__(self):
+        self.school = models.College.objects.get(pk=1)
+        self.get_teams()
+        self.get_positions()
+        self.get_fantasy_positions()
+
+    def get_teams(self):
+        self.teams = {}
+        teams = models.NflTeam.objects.all()
+        for t in teams:
+            self.teams[t.abbreviation] = t
+
+    def get_positions(self):
+        self.positions = {}
+        positions = models.NflPosition.objects.all()
+        for p in positions:
+            self.positions[p.abbreviation] = p
+
+    def get_fantasy_positions(self):
+        self.fantasy_pos = {}
+        positions = models.FantasyPosition.objects.all()
+        for p in positions:
+            self.fantasy_pos[p.position.abbreviation] = p
+
 
 class PlayerMatcher(object):
     def __init__(self, json, pos):
         self.data_obj = json
         self.pos = pos
-
-    def add_globals(self):
-        """Adds NflTeam, College, position, fantasy position"""
-        pass
+        if not self.data_obj['team']:
+            self.data_obj['team'] = "UNK"
 
     def in_db(self):
         matches = models.NflPlayer.objects.filter(
@@ -22,14 +44,25 @@ class PlayerMatcher(object):
             Q(position__abbreviation__contains=self.pos)
         )
         if matches:
-            print "Found player {} ".format(self.name())
             return True
         else:
             print "Missing player {} ".format(self.name())
             return False
 
     def add_to_db(self, globals):
-        print "    Adding {} to DB...".format(self.name())
+        db_model = {
+            'first_name': self.data_obj['first_name']
+            , 'last_name': self.data_obj['last_name']
+            , 'draft_year': 1
+            # These are all foreign keys, need to retrieve from globals
+            , 'team': globals.teams[self.data_obj['team']]
+            , 'school': globals.school # always wrong :-)
+            , 'position': globals.positions[self.pos]
+            , 'fantasy_position': globals.fantasy_pos[self.pos]
+        }
+        player, added = models.NflPlayer.objects.get_or_create(**db_model)
+        if added:
+            print "    Adding {} to DB...".format(player)
 
     def name(self):
         return "{} {}".format(self.data_obj['first_name'],
