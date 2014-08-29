@@ -1,3 +1,4 @@
+import datetime
 from django import forms
 from django.core.validators import MinValueValidator
 from django.utils import timezone
@@ -30,7 +31,7 @@ class MockDraftForm(forms.ModelForm):
     admin = forms.EmailField(initial="mockdrafts@blackhole.gnmerritt.net",
                              widget=forms.HiddenInput())
     draft_start = forms.DateTimeField(
-        validators=[MinValueValidator(timezone.now())],
+        validators=[MinValueValidator(timezone.now() + datetime.timedelta(minutes=5))],
         input_formats=["%m/%d/%Y %I:%M:%S %p"])
     team_limit = forms.IntegerField(initial=12,
                                     validators=[MinValueValidator(4)])
