@@ -1,0 +1,11 @@
+ipython
+django
+South
+simplejson
+jsonpickle
+readline
+django-nose
+django-brake
+redis
+python-dateutil
+gunicorn
