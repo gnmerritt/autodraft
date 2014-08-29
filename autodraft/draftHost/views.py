@@ -263,7 +263,6 @@ def mock_draft(request):
         })
         new_team = creator.create_team()
         m.BotTeamCreator(draft, form).run()
-        d.PickAssigner(draft).run()
         return my_team(request, key=new_team.auth_key, write_cookie=False)
     # If the form isn't valid, return it with errors
     context = {
