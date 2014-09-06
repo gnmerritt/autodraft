@@ -244,7 +244,9 @@ def draft_pick_ajax(request, id):
     return draft_detail(request, id, ajax_only=True)
 
 def documentation(request):
-    return render(request, 'draftHost/documentation.html', {})
+    return render(request, 'draftHost/documentation.html', {
+        'key': '8891a052-7d14-48db-9c2c-c0a59f87e927' # Nathan's 2013 team
+    })
 
 @ratelimit(rate="5/m", block=True)
 def mock_draft(request):

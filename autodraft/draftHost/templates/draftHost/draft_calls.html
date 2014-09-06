@@ -1,4 +1,5 @@
-<p>All the following require a valid key parameter</p>
+<p>All the following require a valid key parameter. Click on the links
+for an example response.</p>
 
 <table class="calls table table-bordered table-striped">
   <tr>
@@ -8,23 +9,31 @@
   <tr>
   <tr>
     <td>Draft info:</td>
-    <td><a href="{% url 'draftHost:api:draft' %}">{% url 'draftHost:api:draft' %}</a></td>
+    <td><a href="{% url 'draftHost:api:draft' %}?key={{ key }}">{% url 'draftHost:api:draft' %}</a></td>
     <td>Draft information, teams, picks</td>
   </tr>
   <tr>
+    <td>Your team:</td>
+    <td><a href="{% url 'draftHost:api:current_team' %}?key={{ key }}">{% url 'draftHost:api:current_team' %}</a></td>
+    <td>{ name:"Your name", picks: [list of pick objects], players: [who you've drafted] }</td>
+  </tr>
+  <tr>
     <td>Draft picks & selections:</td>
-    <td><a href="{% url 'draftHost:api:picks' %}">{% url 'draftHost:api:picks' %}</a></td>
+    <td><a href="{% url 'draftHost:api:picks' %}?key={{ key }}">{% url 'draftHost:api:picks' %}</a></td>
     <td>picks & selections</td>
   </tr>
   <tr>
     <td>Make a pick:</td>
-    <td><a href="{% url 'draftHost:api:make_pick' 4 %}">{% url 'draftHost:api:make_pick' 4 %}</a></td>
-    <td>{code -> http status code, success -> True or missing, message -> human readable state, selection -> fantasy selection object }</td>
+    <td><a href="{% url 'draftHost:api:make_pick' 1623 %}?key={{ key }}">{% url 'draftHost:api:make_pick' 1623 %}</a></td>
+    <td>{ code: <a href="https://github.com/gnmerritt/autodraft/blob/master/autodraft/draftHost/logic/draft.py#L145">pick status code</a>,
+      success: True or missing, message: human readable state, selection: fantasy selection object }</td>
   </tr>
   <tr>
     <td>Player status in your draft:</td>
-    <td><a href="{% url 'draftHost:api:player_status' 5 %}">{% url 'draftHost:api:player_status' 5 %}</a></td>
-    <td>Returns the player object, including fantasy team if he's been picked</td>
+    <td><a href="{% url 'draftHost:api:player_status' 1623 %}?key={{ key }}">{% url 'draftHost:api:player_status' 1623 %}</a></td>
+    <td>Returns the player object, including fantasy team if he's been
+    picked. Use this if you want to check player availability before
+    your turn!</td>
   </tr>
 
 </table>

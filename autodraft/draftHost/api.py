@@ -23,7 +23,7 @@ urlpatterns = patterns('draftHost.views',
     url(r'^team/(?P<id>\d+)/players/?$',
         views.fantasy_team_players, name='fantasy_team_players'),
     url(r'^team/(?P<name>.*)/?$', 'team_info_name'),
-    url(r'^team/?$', 'current_team'),
+    url(r'^team/?$', 'current_team', name='current_team'),
 
     # NFL Data methods
     url(r'^nfl/teams/?$', views.nfl_teams, name='nfl_teams'),
