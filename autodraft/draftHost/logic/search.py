@@ -17,7 +17,7 @@ class SearchRunner(object):
         self.query = { 'name':self.name,
                        'position':self.position, }
 
-        players = models.NflPlayer.objects.all()
+        players = models.NflPlayer.objects
 
         if self.name:
             players = players.filter(
