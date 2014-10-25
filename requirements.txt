@@ -1,11 +1,11 @@
 ipython
-django
-South
+django==1.6.5
+South==0.8.1
 simplejson
 jsonpickle
 readline
-django-nose
-django-brake
+django-nose==1.1
+django-brake==1.2.3
 redis
 python-dateutil
-gunicorn
+gunicorn==18.0
