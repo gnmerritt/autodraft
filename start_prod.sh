@@ -5,4 +5,8 @@ CPUS=`grep -c ^processor /proc/cpuinfo`
 JOBS=$(($CPUS + 1))
 cd $DIR
 source venv/bin/activate
-python autodraft/manage.py run_gunicorn --settings autodraft.prod-settings -b ${HOST_IP}:8000 -w $JOBS
+python autodraft/manage.py run_gunicorn \
+       --settings autodraft.prod-settings \
+       -b ${HOST_IP}:8000 \
+       -w $JOBS \
+       --timeout 120
