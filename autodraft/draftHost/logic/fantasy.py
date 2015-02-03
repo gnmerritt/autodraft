@@ -163,7 +163,9 @@ class JsonFantasySelection(JsonObject):
         return pick.json_dict()
 
     def get_player(self):
-        return nfl.JsonNflPlayer(self.db_object.player).json_dict()
+        player = nfl.JsonNflPlayer(self.db_object.player)
+        player.show_team = self.show_team
+        return player.json_dict()
 
     def get_when(self):
         return JsonTime(self.db_object.when).json_dict()
