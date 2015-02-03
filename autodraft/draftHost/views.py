@@ -166,7 +166,10 @@ def index(request):
 
     for d in models.FantasyDraft.objects.exclude(
             id__in = [x.draft.id for x in mock_drafts]):
-        json = fantasy.JsonFantasyDraft(d).json_dict()
+        draft = fantasy.JsonFantasyDraft(d)
+        draft.show_selections = False
+        draft.show_roster = False
+        json = draft.json_dict()
         if d.draft_start > now + datetime.timedelta(hours=1):
             json['active'] = True
 
