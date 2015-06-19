@@ -36,3 +36,8 @@ class TeamRegisterForm(forms.Form):
     email = forms.EmailField(widget=forms.TextInput(
         attrs={'placeholder': 'Will be obfuscated'}))
     draft_id = forms.IntegerField()
+    password = forms.CharField(max_length=32, widget=forms.PasswordInput,
+                               required=False)
+
+    def add_password(self):
+        self.has_password = True

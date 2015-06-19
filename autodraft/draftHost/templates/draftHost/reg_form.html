@@ -17,6 +17,11 @@
   </td>
 
   <td>
+    {% if draft.registration.has_password %}
+      {{ draft.registration.password.errors }}
+      <label for="password">Password</label>
+      {{ draft.registration.password }}
+    {% endif %}
     <input type="submit" value="Register"/>
   </td>
 </form>

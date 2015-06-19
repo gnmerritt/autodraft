@@ -173,7 +173,11 @@ def index(request):
             json['active'] = True
 
             if len(json['teams']) < d.team_limit:
-                json['registration'] = auth.TeamRegisterForm()
+                form = auth.TeamRegisterForm()
+                if d.password:
+                    form.add_password()
+                json['registration'] = form
+
         drafts.append(json)
     drafts.sort(key=lambda d: d['draft_start']['utc'], reverse=True)
     context = {
