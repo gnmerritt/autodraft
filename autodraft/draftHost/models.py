@@ -107,6 +107,7 @@ class FantasyDraft(models.Model):
     time_per_pick = models.PositiveIntegerField()
     team_limit = models.PositiveIntegerField()
     roster = models.ForeignKey(FantasyRoster)
+    password = models.TextField(max_length=32, null=True)
 
     def __unicode__(self):
         return self.name
