@@ -4,6 +4,10 @@
 
 <h1>Drafts</h1>
 
+{% if error %}
+  <h2 style="color:red">Oops! Looks like you entered an invalid password!</h2>
+{% endif %}
+
 <ul class="draftList">
 {% for draft in drafts %}
 <li>

@@ -158,8 +158,11 @@ def my_team(request, key, write_cookie=True):
         response.set_cookie('draftKey', key)
     return response
 
+def reg_error(request):
+    return index(request, error=True)
+
 @ratelimit(rate="20/m")
-def index(request):
+def index(request, error=False):
     now = timezone.now()
     drafts = []
     mock_drafts = models.MockDraft.objects.all()
@@ -182,6 +185,7 @@ def index(request):
     drafts.sort(key=lambda d: d['draft_start']['utc'], reverse=True)
     context = {
         'drafts': drafts,
+        'error': error,
     }
     return render(request, 'draftHost/index.html', context)
 
@@ -198,7 +202,7 @@ def register(request):
                 private_team_page = reverse('draftHost:my_team', kwargs=args)
                 return HttpResponseRedirect(private_team_page)
             else:
-                return HttpResponseRedirect(reverse('draftHost:index'))
+                return HttpResponseRedirect(reverse('draftHost:error'))
 
         return index(request)
     else:

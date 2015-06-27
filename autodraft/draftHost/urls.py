@@ -12,6 +12,7 @@ urlpatterns = patterns('draftHost.views',
     url(r'^draft/(?P<id>\d+)/?$', views.draft_detail, name='draft'),
     url(r'^draft/(?P<id>\d+)/picks/?$', views.draft_pick_ajax, name='pick_ajax'),
     url(r'^/?$', views.index, name='index'),
+    url(r'^error/?$', views.reg_error, name='error'),
 
     # API v1
     url(r'^api/v1/', include(api, namespace="api"))
