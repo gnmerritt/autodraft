@@ -128,7 +128,6 @@ class PickAssigner(object):
             t.remove_picks()
 
     def pick_status(self):
-        status = 'NONE'
         has_picks = 0
         for t in self.teams:
             if t.picks():
@@ -145,8 +144,7 @@ class PickAssigner(object):
 class PickValidator(object):
     statuses = {
         'taken': [410, "That player has already been picked"],
-        'pick_used': [409, "A player has already been selected with this pick"],
-        'inactive': [409, "No picks active right now"],
+        'inactive': [409, "No unused picks active right now"],
         'success': [200, "Player drafted successfully!"],
     }
 
@@ -159,18 +157,15 @@ class PickValidator(object):
         now  = timezone.now()
         picks = models.FantasyPick.objects.filter(
             fantasy_team=self.context.team,
-            starts__lte=now, expires__gte=now
+            starts__lte=now
         )
-        if picks:
-            self.pick = picks[0]
+        not_used_picks = filter(lambda p: not self.pick_used(p), picks)
+        if not_used_picks:
+            self.pick = not_used_picks[0]
 
     def draft_player(self, player):
         if not self.pick:
             self.status = self.statuses['inactive']
-            return
-
-        if self.pick_used():
-            self.status = self.statuses['pick_used']
             return
 
         if self.player_taken(player):
@@ -183,9 +178,9 @@ class PickValidator(object):
         self.status = self.statuses['success']
         self.success = True
 
-    def pick_used(self):
+    def pick_used(self, pick):
         selections = models.FantasySelection.objects.filter(
-            draft_pick=self.pick
+            draft_pick=pick
         )
         if selections:
             self.selection = selections[0]
