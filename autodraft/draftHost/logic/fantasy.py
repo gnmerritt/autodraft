@@ -113,7 +113,8 @@ class FantasyTeamCreator(object):
                 form_pw = self.data['password']
                 if form_pw != draft.password:
                     return None
-            del self.data['password']
+            if 'password' in self.data:
+                del self.data['password']
             self.data['auth_key'] = self.get_auth_key()
             team, created = models.FantasyTeam.objects.get_or_create(**self.data)
             return team
