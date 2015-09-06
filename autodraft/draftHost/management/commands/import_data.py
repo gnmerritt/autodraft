@@ -1,6 +1,7 @@
 from django.core.management.base import NoArgsCommand
 
-from draftHost.importers import positions, conferences, colleges, teams, players
+from draftHost.importers import positions, conferences, colleges, \
+    teams, players
 
 
 class Command(NoArgsCommand):

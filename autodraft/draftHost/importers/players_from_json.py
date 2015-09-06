@@ -34,7 +34,8 @@ class PlayerMatcher(object):
     def __init__(self, json, pos):
         self.data_obj = json
         self.pos = pos
-        if not self.data_obj['team']:
+        team = self.data_obj['team']
+        if not team or team == 'FA':
             self.data_obj['team'] = "UNK"
 
     def in_db(self):
@@ -51,14 +52,14 @@ class PlayerMatcher(object):
 
     def add_to_db(self, globals):
         db_model = {
-            'first_name': self.data_obj['first_name']
-            , 'last_name': self.data_obj['last_name']
-            , 'draft_year': 1
+            'first_name': self.data_obj['first_name'],
+            'last_name': self.data_obj['last_name'],
+            'draft_year': 1,
             # These are all foreign keys, need to retrieve from globals
-            , 'team': globals.teams[self.data_obj['team']]
-            , 'school': globals.school # always wrong :-)
-            , 'position': globals.positions[self.pos]
-            , 'fantasy_position': globals.fantasy_pos[self.pos]
+            'team': globals.teams[self.data_obj['team']],
+            'school': globals.school,  # always wrong :-)
+            'position': globals.positions[self.pos],
+            'fantasy_position': globals.fantasy_pos[self.pos]
         }
         player, added = models.NflPlayer.objects.get_or_create(**db_model)
         if added:
@@ -95,7 +96,7 @@ class JsonUpdater(object):
             pass
 
     def clean_input(self, str):
-        start_brace = str.index("{");
+        start_brace = str.index("{")
         end_brace = str.rfind("}") + 1
         return str[start_brace:end_brace]
 
