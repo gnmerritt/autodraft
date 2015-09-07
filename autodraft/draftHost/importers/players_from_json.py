@@ -31,14 +31,47 @@ class GlobalData(object):
 
 
 class PlayerMatcher(object):
+    # Other abbreviations for teams, mapped onto ours
+    TEAM_ALIASES = {
+        "FA": "UNK",
+        "NEP": "NE",
+        "GBP": "GB",
+        "TBB": "TB",
+        "SFO": "SF",
+        "ARZ": "ARI",
+        "KCC": "KC",
+        "SDC": "SD",
+        "NOR": "NO",
+    }
+
+    POS_ALIASES = {
+        "D": "DST",
+    }
+
     def __init__(self, json, pos):
         self.data_obj = json
-        self.pos = pos
+        self.pos = self.check_alias(pos, self.POS_ALIASES)
         team = self.data_obj['team']
-        if not team or team == 'FA':
-            self.data_obj['team'] = "UNK"
+        if not team:
+            self.data_obj['team'] = 'UNK'
+        else:
+            self.data_obj['team'] = self.check_alias(team, self.TEAM_ALIASES)
+
+    def check_alias(self, key, aliases):
+        return aliases[key] if key in aliases else key
+
+    def excluded_special(self):
+        first = self.data_obj['first_name']
+        last = self.data_obj['last_name']
+        if first == "Joshua" and last == "McCown" or \
+           first == "Robert" and last == "Griffin III":
+            return True
 
     def in_db(self):
+        if self.pos == "DST":
+            return True
+        if self.excluded_special():
+            return True
         matches = models.NflPlayer.objects.filter(
             Q(first_name__contains=self.data_obj['first_name']) &
             Q(last_name__contains=self.data_obj['last_name']) &

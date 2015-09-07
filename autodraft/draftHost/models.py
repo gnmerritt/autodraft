@@ -25,7 +25,8 @@ class NflTeam(models.Model):
     division = models.ForeignKey(NflDivision)
 
     def __unicode__(self):
-        return u"{c} {n}".format(c=self.city, n=self.name)
+        return u"{a} - {c} {n}" \
+            .format(c=self.city, n=self.name, a=self.abbreviation)
 
 
 class NflPosition(models.Model):
