@@ -13,6 +13,7 @@ from draftHost.logic import nfl, fantasy, auth, draft, json, college, site
 from draftHost.logic import search as s, draft as d, mock_draft as m
 from draftHost.logic.auth import AuthContext as AuthContext
 
+
 def get_context_or_error(request):
     """Tries to build a AuthContext, raises an error on failure"""
     context = AuthContext(request)
@@ -20,21 +21,25 @@ def get_context_or_error(request):
         return context
     raise django.core.exceptions.PermissionDenied("invalid auth key")
 
+
 @ratelimit(rate="30/m")
 def draft_key(request):
     context = get_context_or_error(request)
     return fantasy.JsonFantasyDraft(context.draft).json_response(request)
+
 
 @ratelimit(rate="30/m")
 def draft_id(request, id):
     draft = get_object_or_404(models.FantasyDraft, pk=id)
     return fantasy.JsonFantasyDraft(draft).json_response(request)
 
+
 def picks(request):
     context = get_context_or_error(request)
     picks = draft.PickBuilder(context.draft)
     picks.now = timezone.now()
     return picks.json_response(request)
+
 
 @ratelimit(rate="20/m", field='key')
 def make_pick(request, player_id):
@@ -53,10 +58,12 @@ def make_pick(request, player_id):
     else:
         raise django.http.response.BadHeaderError("only POST/OPTIONS allowed")
 
+
 def player(request, uid):
     db_player = get_object_or_404(models.NflPlayer, pk=uid)
     json_player = nfl.JsonNflPlayer(db_player)
     return json_player.json_response(request)
+
 
 def player_status(request, uid):
     db_player = get_object_or_404(models.NflPlayer, pk=uid)
@@ -66,29 +73,35 @@ def player_status(request, uid):
     json_player.show_fantasy_team = True
     return json_player.json_response(request)
 
+
 def search(request, name=None, position=None):
     return s.SearchRunner() \
-      .name(name) \
-      .position(position) \
-      .json_results() \
-      .json_response(request)
+        .name(name) \
+        .position(position) \
+        .json_results() \
+        .json_response(request)
+
 
 def team_id(request, id):
     team = get_object_or_404(models.FantasyTeam, pk=id)
     return team_response(team, request)
 
+
 def team_info_name(request, name):
     team = get_object_or_404(models.FantasyTeam, name=name)
     return team_response(team, request)
+
 
 def current_team(request):
     context = get_context_or_error(request)
     return team_response(context.team, request)
 
+
 def team_response(db_team, request):
     json_team = fantasy.JsonFantasyTeam(db_team)
     json_team.show_players = True
     return json_team.json_response(request)
+
 
 def fantasy_team_players(request, id):
     team = get_object_or_404(models.FantasyTeam, pk=id)
@@ -96,13 +109,16 @@ def fantasy_team_players(request, id):
     json_team.show_players = True
     return json_team.json_response(request)
 
+
 def nfl_teams(request):
     teams = models.NflTeam.objects.all().exclude(name="Unknown")
     teams_json = [nfl.JsonNflTeam(t).json_dict() for t in teams]
     return json.obj_to_json({'teams': teams_json}, request)
 
+
 def nfl_team(request, id):
     return nfl_team_with_players(request, id, include_players=False)
+
 
 @ratelimit(rate='10/m', block=True)
 def nfl_team_with_players(request, id, include_players=True):
@@ -112,30 +128,35 @@ def nfl_team_with_players(request, id, include_players=True):
         json_team.show_players = True
     return json_team.json_response(request)
 
+
 def nfl_divisions(request):
     divisions = models.NflDivision.objects.all()
     divisons_json = [nfl.JsonNflDivision(d).json_dict()
                      for d in divisions]
-    return json.obj_to_json({'divisions':divisons_json}, request)
+    return json.obj_to_json({'divisions': divisons_json}, request)
+
 
 def nfl_conferences(request):
     conferences = models.NflConference.objects.all()
     conferences_json = [nfl.JsonNflConference(c).json_dict()
                         for c in conferences]
-    return json.obj_to_json({'conferences':conferences_json}, request)
+    return json.obj_to_json({'conferences': conferences_json}, request)
+
 
 def nfl_positions(request):
     positions = models.NflPosition.objects.all()
     positions_json = [nfl.JsonNflPosition(p).json_dict()
                       for p in positions]
-    return json.obj_to_json({'positions':positions_json}, request)
+    return json.obj_to_json({'positions': positions_json}, request)
+
 
 def colleges(request):
     colleges = models.College.objects.all().exclude(name="Unknown")
     colleges_json = []
     for c in colleges:
         colleges_json.append(college.JsonCollege(c).json_dict())
-    return json.obj_to_json({'colleges':colleges_json}, request)
+    return json.obj_to_json({'colleges': colleges_json}, request)
+
 
 @ratelimit(block=True)
 def college_players(request, id):
@@ -143,6 +164,7 @@ def college_players(request, id):
     college_json = college.JsonCollege(c)
     college_json.show_players = True
     return college_json.json_response(request)
+
 
 def my_team(request, key, write_cookie=True):
     if key == 'your-key-goes-here':
@@ -158,8 +180,10 @@ def my_team(request, key, write_cookie=True):
         response.set_cookie('draftKey', key)
     return response
 
+
 def reg_error(request):
     return index(request, error=True)
+
 
 @ratelimit(rate="20/m")
 def index(request, error=False):
@@ -168,7 +192,7 @@ def index(request, error=False):
     mock_drafts = models.MockDraft.objects.all()
 
     for d in models.FantasyDraft.objects.exclude(
-            id__in = [x.draft.id for x in mock_drafts]):
+            id__in=[x.draft.id for x in mock_drafts]):
         draft = fantasy.JsonFantasyDraft(d)
         draft.show_selections = False
         json = draft.json_dict()
@@ -189,6 +213,7 @@ def index(request, error=False):
     }
     return render(request, 'draftHost/index.html', context)
 
+
 def register(request):
     if request.method == 'POST':
         form = auth.TeamRegisterForm(request.POST)
@@ -207,6 +232,7 @@ def register(request):
         return index(request)
     else:
         raise django.http.response.BadHeaderError("only POST allowed")
+
 
 def draft_detail(request, id, ajax_only=False):
     draft = get_object_or_404(models.FantasyDraft, pk=id)
@@ -243,20 +269,53 @@ def draft_detail(request, id, ajax_only=False):
         'picks': picks[:shown_picks],
         'selections': selections,
         'is_active': is_active,
-        'poll_time': 10000, # 10 seconds
+        'poll_time': 10000,  # 10 seconds
     }
     if ajax_only:
         return render(request, 'draftHost/detail_ajax.html', context)
     else:
         return render(request, 'draftHost/draft.html', context)
 
+
 def draft_pick_ajax(request, id):
     return draft_detail(request, id, ajax_only=True)
 
+
+def draft_results(request, id):
+    draft = get_object_or_404(models.FantasyDraft, pk=id)
+    json_draft = fantasy.JsonFantasyDraft(draft).json_dict()
+
+    selections_queryset = models.FantasySelection.objects.filter(
+        draft_pick__fantasy_team__draft=draft
+    )
+    selections_by_team = {}
+    teams = []
+    for s in selections_queryset:
+        selection_json = fantasy.JsonFantasySelection(s)
+        selection_json.show_team = True
+        json_values = selection_json.json_dict()
+        team = json_values['team']['id']
+        if team not in selections_by_team:
+            selections_by_team[team] = []
+            teams.append(json_values['team'])
+        selections_by_team[team].append(json_values)
+
+    for t in teams:
+        id = t['id']
+        t['selections'] = selections_by_team.get(id, [])
+
+    context = {
+        'draft': json_draft,
+        'teams': teams,
+    }
+    return render(request, 'draftHost/results.html', context)
+
+
 def documentation(request):
     return render(request, 'draftHost/documentation.html', {
-        'key': '8891a052-7d14-48db-9c2c-c0a59f87e927' # Nathan's 2013 team
+        'key': '8891a052-7d14-48db-9c2c-c0a59f87e927'  # Nathan's 2013 team
     })
+
 
 @ratelimit(rate="5/m", block=True)
 def mock_draft(request):

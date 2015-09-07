@@ -1,0 +1,46 @@
+{% extends "draftHost/base.html" %}
+
+{% block content %}
+
+<ul class="draftList">
+  <li>{% include 'draftHost/draft_info.html' %}</li>
+</ul>
+
+<h2>{{ draft.name }} results</h2>
+
+{% for t in teams %}
+<h3>{{ t.name }}</h3>
+
+{% for s in t.selections %}
+{% if forloop.first %}
+<table class="selections table table-bordered table-striped">
+  <tr>
+    <th>Pick</th>
+    <th>Player</th>
+    <th>Position</th>
+    <th>At</th>
+  </tr>
+{% endif %}
+  <tr>
+    <td>{{ s.draft_pick.pick_number }}</td>
+    <td>{{ s.player.first_name }} {{ s.player.last_name }}</td>
+    <td>{{ s.player.fantasy_position }}</td>
+    <td>{{ s.when.str }}</td>
+  </tr>
+{% if forloop.last %}
+  </table>
+{% endif %}
+
+{% endfor %} <!-- end selections -->
+
+
+{% empty %}
+    <div>None yet!</div>
+{% endfor %} <!-- end teams -->
+
+<div id="TWITTER">
+  <a class="twitter-timeline" href="https://twitter.com/hashtag/autodraft2015" data-widget-id="494962106014253056">#autodraft2015 Tweets</a>
+  <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</div>
+
+{% endblock %}

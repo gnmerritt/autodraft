@@ -6,6 +6,7 @@
   </div>
   <div class="details">
     <div><a href="{% url 'draftHost:draft' draft.id %}">Detail page</a></div>
+    <div><a href="{% url 'draftHost:results' draft.id %}">Draft results by team</a></div>
     <div>Roster: {{ draft.roster.description }} ({{ draft.roster.slots }} slots)</div>
     <div>
       <span>

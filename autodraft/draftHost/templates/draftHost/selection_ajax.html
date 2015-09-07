@@ -4,6 +4,7 @@
   <tr>
     <th>Pick</th>
     <th>Player</th>
+    <th>Position</th>
     <th>Picked by</th>
     <th>At</th>
   </tr>
@@ -12,6 +13,7 @@
   <tr>
     <td>{{ s.draft_pick.pick_number }}</td>
     <td>{{ s.player.first_name }} {{ s.player.last_name }}</td>
+    <td>{{ s.player.fantasy_position }}</td>
     <td>{{ s.team.name }}</td>
     <td>{{ s.when.str }}</td>
   </tr>
