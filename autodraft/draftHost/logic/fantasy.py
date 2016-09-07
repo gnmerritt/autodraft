@@ -1,5 +1,6 @@
 import datetime as d
 import uuid
+from django.utils import timezone
 
 from draftHost import models
 from json import JsonObject, JsonTime, EmailMasker
@@ -37,7 +38,9 @@ class JsonFantasyDraft(JsonObject):
         return json
 
     def get_draft_start(self):
-        return JsonTime(self.db_object.draft_start).json_dict()
+        time = JsonTime(self.db_object.draft_start)
+        time.now = timezone.now()
+        return time.json_dict()
 
     def get_roster(self):
         return JsonFantasyRoster(self.db_object.roster).json_dict()

@@ -15,8 +15,14 @@
       {% else %}
         Draft started at
       {% endif %}
-      {{ draft.draft_start.str }},</span>
-      <span>{{ draft.time_per_pick_s }} seconds / pick</span>
+      {{ draft.draft_start.str }}
+      </span>
+      {% if draft.active %}
+        <span style="font-weight: 700">
+          (in {{ draft.draft_start.relative }})
+        </span>
+      {% endif %}
     </div>
+    <div>{{ draft.time_per_pick_s }} seconds / pick</div>
   </div>
 </div>
